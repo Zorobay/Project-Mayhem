@@ -12,10 +12,12 @@ import org.newdawn.slick.state.StateBasedGame;
 
 
 public class ProjectMayhem extends StateBasedGame{
-
+	
+	private static final String TITLE = "Project Mayhem! v0.1";
+	
 	//Declare all state IDs
 	public static final int MAINMENU = 0;
-	private static final String TITLE = "Project Mayhem! v0.1";
+	
 	
 	public ProjectMayhem(String name) {
 		super(name);
