@@ -2,6 +2,7 @@ package projectmayhem;
 
 import java.util.ArrayList;
 
+import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -10,77 +11,28 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 
-public class ProjectMayhem extends BasicGameState{
+public class ProjectMayhem extends StateBasedGame{
 
-	boolean showIntroText, showGameOverText, isNewGame;
-	static int clicks;
-	Double timePassed;
-	ArrayList score;
+	//Declare all state IDs
+	public static final int MAINMENU = 0;
+	private static final String TITLE = "Project Mayhem! v0.1";
 	
-	public ProjectMayhem(int ID){
-		
-	}
-	
-	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		score = new ArrayList();
-		showIntroText = true;
-		showGameOverText = false;
-		isNewGame = false;
-		clicks = 0;
-		time = new Chronometer("time");
-	}
-
-	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		if(showIntroText){
-			g.drawString("Click To Start!", 320, 300);
-		}
-		else if(showGameOverText){
-			g.drawString("Game Over! To play again, press SPACE\nTo exit to score, press E", 220, 300);
-		}
-		else{
-			g.drawString(Integer.toString(clicks), 400, 300);
-			g.drawString(String.format("%.1f", time.getTimeSeconds()), 400, 150);
-		}
-		
+	public ProjectMayhem(String name) {
+		super(name);
+		this.addState(new MainMenu(MAINMENU));
 		
 	}
 
-	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		
-		Input input = gc.getInput();
-		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
-			showIntroText = false;
-			clicks++;
-			time.Start();
-			if(isNewGame){
-				clicks = 0;
-				time.Restart();
-				isNewGame = false;
-				
-			}
-		}
-		
-		if(input.isKeyPressed(Input.KEY_SPACE)){
-			showIntroText = true;
-			isNewGame = true;
-			showGameOverText = false;
-		}
-		
-		if(time.isStarted()){
-			if(time.getTimeSeconds() >= 30){
-				showGameOverText = true;
-				showIntroText = false;
-			}
-		}
-		
+	public void initStatesList(GameContainer gc) throws SlickException {
+		this.getState(MAINMENU).init(gc, this);
+		this.enterState(MAINMENU);
 	}
 	
-	public int getID() {
-		return 0;
-	}
-	
-	public static int getClicks(){
-		return clicks;
+	public static void main (String args[]) throws SlickException{
+		AppGameContainer appgc = new AppGameContainer(new ProjectMayhem(TITLE));
+		appgc.setDisplayMode(800, 600, false);
+		appgc.start();
 	}
 }
+		
+	
