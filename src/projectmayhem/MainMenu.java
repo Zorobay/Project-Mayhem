@@ -1,5 +1,7 @@
 package projectmayhem;
 
+import misc.Button;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,7 +14,7 @@ public class MainMenu extends BasicGameState{
 	public static int ID;
 
 	int playButtonState;	
-	Image play[];
+	Button play;
 	
 	
 	public MainMenu(int ID){
@@ -21,13 +23,11 @@ public class MainMenu extends BasicGameState{
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		playButtonState = 0;
-		play = new Image[2];
-		play[0] = new Image("res/playbutton.png");
-		play[1] = new Image("res/playbuttonhover.png");
+		play = new Button(new Image("graphics/buttons/playbutton.png"), new Image("graphics/buttons/playbuttonhover.png"), Button.MID(), Button.MID(), gc);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
-		play[playButtonState].draw(400,300);
+		play.getGraphics().draw(play.getX(), play.getY());
 		
 	}
 	
