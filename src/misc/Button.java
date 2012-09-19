@@ -12,7 +12,8 @@ public class Button {
 	GameContainer gc; 
 	int x, y;
 	static final int MID = -1; static final int LEFTMID = -2; static final int RIGHTMID = -3;
-	
+	static final int MIDTOP = -4; static final int LEFTTOP= -5; static final int RIGHTTOP = -6;
+	static final int MIDBOT = -7; static final int LEFTBOT= -8; static final int RIGHTBOT = -9;
 	public Button(Image def, Image hover, int x, int y, GameContainer gc){
 		this.def = def;
 		this.hover = hover;
@@ -22,6 +23,12 @@ public class Button {
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2; break;
 		case -2: this.x = 0; break;
 		case -3: this.x = gc.getWidth() - def.getWidth(); break;
+		case -4: this.x = gc.getWidth()/2 - def.getWidth();break;
+		case -5: this.x = 0;break;
+		case -6: this.x = gc.getWidth() - def.getWidth(); break;
+		case -7: this.x = gc.getWidth()/2 - def.getWidth();break;
+		case -8: this.x = 0;break;
+		case -9: this.x = gc.getWidth() - def.getWidth(); break;
 		default: this.x = x; break;
 		}
 		
@@ -29,6 +36,12 @@ public class Button {
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
+		case -4: this.y = 0;break;
+		case -5: this.y = 0;break;
+		case -6: this.y = 0;break;
+		case -7: this.y = gc.getHeight() - def.getHeight(); break;
+		case -8: this.y = gc.getHeight() - def.getHeight(); break;
+		case -9: this.y = gc.getHeight() - def.getHeight(); break;
 		default: this.y = y; break;
 		}
 	}
@@ -42,6 +55,12 @@ public class Button {
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2; break;
 		case -2: this.x = 0; break;
 		case -3: this.x = gc.getWidth() - def.getWidth(); break;
+		case -4: this.x = gc.getWidth()/2 - def.getWidth();break;
+		case -5: this.x = 0;break;
+		case -6: this.x = gc.getWidth() - def.getWidth(); break;
+		case -7: this.x = gc.getWidth()/2 - def.getWidth();break;
+		case -8: this.x = 0;break;
+		case -9: this.x = gc.getWidth() - def.getWidth(); break;
 		default: this.x = x; break;
 		}
 		
@@ -49,6 +68,12 @@ public class Button {
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
+		case -4: this.y = 0;break;
+		case -5: this.y = 0;break;
+		case -6: this.y = 0;break;
+		case -7: this.y = gc.getHeight() - def.getHeight(); break;
+		case -8: this.y = gc.getHeight() - def.getHeight(); break;
+		case -9: this.y = gc.getHeight() - def.getHeight(); break;
 		default: this.y = y; break;
 		}
 	}
@@ -97,5 +122,23 @@ public class Button {
 	
 	public static int RIGHTMID(){
 		return RIGHTMID;
+	}
+	public static int MIDTOP(){
+		return MIDTOP;
+	}
+	public static int LEFTTOP(){
+		return LEFTTOP;
+	}
+	public static int RIGHTTOP(){
+		return RIGHTTOP;
+	}
+	public static int MIDBOT(){
+		return MIDBOT;
+	}
+	public static int LEFTBOT(){
+		return LEFTBOT;
+	}
+	public static int RIGHTBOT(){
+		return RIGHTBOT;
 	}
 }
