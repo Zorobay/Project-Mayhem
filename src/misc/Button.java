@@ -11,10 +11,46 @@ public class Button {
 	Image active;
 	GameContainer gc; 
 	int x, y;
+	int xoffset, yoffset;
 	
 	static final int MID = -1; static final int LEFTMID = -2; static final int RIGHTMID = -3;
 	static final int MIDTOP = -4; static final int LEFTTOP= -5; static final int RIGHTTOP = -6;
 	static final int MIDBOT = -7; static final int LEFTBOT= -8; static final int RIGHTBOT = -9;
+	
+	public Button(Image def, Image hover, int x, int xoffset, int y, int yoffset, GameContainer gc){
+		this.def = def;
+		this.hover = hover;
+		this.gc = gc;
+		this.xoffset = xoffset;
+		this.yoffset = yoffset;
+		
+		switch(x){
+		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2 + xoffset; break;
+		case -2: this.x = 0 + xoffset; break;
+		case -3: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
+		case -4: this.x = gc.getWidth()/2 - def.getWidth() + xoffset;break;
+		case -5: this.x = 0 + xoffset;break;
+		case -6: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
+		case -7: this.x = gc.getWidth()/2 - def.getWidth() + xoffset;break;
+		case -8: this.x = 0 + xoffset;break;
+		case -9: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
+		default: this.x = x; break;
+		}
+		
+		switch(y){
+		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
+		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
+		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
+		case -4: this.y = 0 + yoffset;break;
+		case -5: this.y = 0 + yoffset;break;
+		case -6: this.y = 0 + yoffset;break;
+		case -7: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
+		case -8: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
+		case -9: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
+		default: this.y = y; break;
+		}
+	}
+	
 	public Button(Image def, Image hover, int x, int y, GameContainer gc){
 		this.def = def;
 		this.hover = hover;
