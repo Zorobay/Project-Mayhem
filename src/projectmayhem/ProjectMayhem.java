@@ -32,7 +32,7 @@ public class ProjectMayhem extends StateBasedGame{
 	
 	public static void main (String args[]) throws SlickException{
 		AppGameContainer appgc = new AppGameContainer(new ProjectMayhem(TITLE));
-		appgc.setDisplayMode(800, 600, false);
+		appgc.setDisplayMode(800, 500, false);
 		appgc.start();
 	}
 }
