@@ -11,6 +11,7 @@ public class Button {
 	Image active;
 	GameContainer gc; 
 	int x, y;
+	
 	static final int MID = -1; static final int LEFTMID = -2; static final int RIGHTMID = -3;
 	
 	public Button(Image def, Image hover, int x, int y, GameContainer gc){
