@@ -6,6 +6,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -13,6 +14,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class ProjectMayhem extends StateBasedGame{
 	
+	static AppGameContainer appgc;
 	private static final String TITLE = "Project Mayhem! v0.1";
 	
 	//Declare all state IDs
@@ -31,9 +33,13 @@ public class ProjectMayhem extends StateBasedGame{
 	}
 	
 	public static void main (String args[]) throws SlickException{
-		AppGameContainer appgc = new AppGameContainer(new ProjectMayhem(TITLE));
-		appgc.setDisplayMode(800, 500, false);
+		appgc = new AppGameContainer(new ScalableGame(new ProjectMayhem(TITLE), 1024, 600, false));
+		appgc.setDisplayMode(1024, 600, false);
 		appgc.start();
+	}
+	
+	public static void setResolution(int x, int y, boolean fullscreen) throws SlickException{
+		appgc.setDisplayMode(x, y, fullscreen);
 	}
 }
 		
