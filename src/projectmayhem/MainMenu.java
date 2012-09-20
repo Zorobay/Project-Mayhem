@@ -24,6 +24,7 @@ public class MainMenu extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		playButtonState = 0;
 		play = new Button(new Image("graphics/buttons/playbutton.png"), new Image("graphics/buttons/playbuttonhover.png"), Button.LEFTTOP(), Button.LEFTTOP(), gc);
+		play = new Button(new Image("graphics/buttons/textsettingsbutton.png"), new Image("graphics/buttons/textsettingsbuttonhover.png"), Button.MID(), 200, Button.MID(), 0, gc);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
