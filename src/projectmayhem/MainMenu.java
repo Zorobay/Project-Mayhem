@@ -13,17 +13,15 @@ public class MainMenu extends BasicGameState{
 
 	public static int ID;
 
-	int playButtonState;	
 	Button play;
-	
 	
 	public MainMenu(int ID){
 		this.ID = ID;
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
-		playButtonState = 0;
-		play = new Button(new Image("graphics/buttons/textplaybutton.png"), new Image("graphics/buttons/textplaybuttonhover.png"), Button.MID(), 200, gc);
+		play = new Button(new Image("graphics/buttons/playbutton.png"), new Image("graphics/buttons/playbuttonhover.png"), Button.MID(), Button.MID(), gc);
+		settings = new Button(new Image("graphics/buttons/textsettingsbutton.png"), new Image("graphics/buttons/textsettingsbuttonhover.png"), Button.MID(), 0, Button.MID(), 90, gc);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
