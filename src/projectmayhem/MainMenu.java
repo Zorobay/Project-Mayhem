@@ -13,7 +13,7 @@ public class MainMenu extends BasicGameState{
 
 	public static int ID;
 
-	Button play;
+	Button play, settings;
 	
 	public MainMenu(int ID){
 		this.ID = ID;
@@ -26,11 +26,13 @@ public class MainMenu extends BasicGameState{
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		play.getGraphics().draw(play.getX(), play.getY());
-		
+		settings.getGraphics().draw(settings.getX(), settings.getY());
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
-		
+		if(settings.isClicked()){
+			sbg.enterState(1);
+		}
 	}
 	
 	public int getID(){
