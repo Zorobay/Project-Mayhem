@@ -18,25 +18,27 @@ public class ProjectMayhem extends StateBasedGame {
 	private static final String TITLE = "Project Mayhem! v0.1";
 
 	// Declare all state IDs
-	public static final int MAINMENU = 0;
-	public static final int SETTINGS = 1;
+	private static final int MAINMENU = 0;
+	private static final int SETTINGS = 1;
+	private static final int PLAY = 2;
 
 	public ProjectMayhem(String name) {
 		super(name);
 		this.addState(new MainMenu(MAINMENU));
 		this.addState(new Settings(SETTINGS));
+		this.addState(new Play(PLAY));
 	}
 
 	public void initStatesList(GameContainer gc) throws SlickException {
 		this.getState(MAINMENU).init(gc, this);
 		this.getState(SETTINGS).init(gc, this);
+		this.getState(PLAY).init(gc, this);
 		this.enterState(MAINMENU);
 	}
 
 	public static void main(String args[]) throws SlickException {
 		
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize(); //To get the default resolution of the monitor
 		
 		xres = (int) dim.getWidth();
 		yres = (int) dim.getHeight();
