@@ -193,6 +193,14 @@ public class Button {
 		return y;
 	}
 	
+	public int getWidth(){
+		return active.getWidth();
+	}
+	
+	public int getHeight(){
+		return active.getHeight();
+	}
+	
 	public static int MID(){
 		return MID;
 	}
