@@ -44,10 +44,11 @@ public class Settings extends BasicGameState{
 		resList5_4 = new Dimension[1];
 		resList5_4[0] = new Dimension(1280, 1024);
 		
-		resList16_9 = new Dimension[3];
-		resList16_9[0] = new Dimension(1366, 768);
-		resList16_9[1] = new Dimension(1600, 900);
-		resList16_9[2] = new Dimension(1920, 1080);
+		resList16_9 = new Dimension[4];
+		resList16_9[0] = new Dimension(1024, 600);
+		resList16_9[1] = new Dimension(1366, 768);
+		resList16_9[2] = new Dimension(1600, 900);
+		resList16_9[3] = new Dimension(1920, 1080);
 		
 		resolutionString = gc.getWidth() + "x" + gc.getHeight();
 		
@@ -80,8 +81,11 @@ public class Settings extends BasicGameState{
 		}
 		
 		if(resolution.isClicked()){
+			System.out.println("Resolution was clicked!");
+			System.out.println("Aspect Ratio: " + getAspectRatio(gc.getWidth(), gc.getHeight()));
 			int newX = 0; int newY = 0;
 			if(getAspectRatio(gc.getWidth(), gc.getHeight()) == 43){
+				System.out.println("Aspect Ratio is 4:3!");
 				int arrayPos = 0;
 				for(int i = 0; i <= resList4_3.length; i++){
 					if(resList4_3[i].getWidth() == gc.getWidth()){
@@ -99,6 +103,7 @@ public class Settings extends BasicGameState{
 			}
 			
 			if(getAspectRatio(gc.getWidth(), gc.getHeight()) == 54){
+				System.out.println("Aspect Ratio is 5:4!");
 				int arrayPos = 0;
 				for(int i = 0; i <= resList5_4.length; i++){
 					if(resList5_4[i].getWidth() == gc.getWidth()){
@@ -116,9 +121,11 @@ public class Settings extends BasicGameState{
 			}
 			
 			if(getAspectRatio(gc.getWidth(), gc.getHeight()) == 169){
+				System.out.println("Aspect Ratio is 16:9");
 				int arrayPos = 0;
 				for(int i = 0; i <= resList16_9.length; i++){
 					if(resList16_9[i].getWidth() == gc.getWidth()){
+						System.out.println("X resolution is: " + resList16_9[i].getWidth() + ", position " + i);
 						if(i == resList16_9.length - 1){
 							arrayPos = 0;
 						}
@@ -131,6 +138,8 @@ public class Settings extends BasicGameState{
 				newX = (int) resList16_9[arrayPos].getWidth();
 				newY = (int) resList16_9[arrayPos].getHeight();
 			}
+			ProjectMayhem.setResolution(newX, newY);
+			System.out.println("Setting resolution to: " + newX + "x" + newY);
 		}
 	}
 	
@@ -156,13 +165,14 @@ public class Settings extends BasicGameState{
 		
 		case 1280: xIs5_4 = true; //Check for 5:4
 		
+		case 1024: xIs16_9 = true;
 		case 1366: xIs16_9 = true; //Check for 16:9
 		case 1920: xIs16_9 = true;break;
 		default: xIs4_3 = false; xIs5_4 = false; xIs16_9 = false; break;
 		}
 		
 		switch(y){ 
-		case 600: yIs4_3 = true;  //Check for 4:3
+		case 600: yIs4_3 = true; yIs16_9 = true; //Check for 4:3
 		case 864: yIs4_3 = true; 
 		case 1050: yIs4_3 = true;
 		case 1200: yIs4_3 = true;
