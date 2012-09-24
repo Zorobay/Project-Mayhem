@@ -35,14 +35,9 @@ public class MainMenu extends BasicGameState {
 		play.getGraphics().draw(play.getX(), play.getY());
 		settings.getGraphics().draw(settings.getX(), settings.getY());
 	}
-
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if (settings.isClicked()) {
 			sbg.enterState(1);
-		}
-		
-		if(play.isClicked()){
-			sbg.enterState(2);
 		}
 	}
 

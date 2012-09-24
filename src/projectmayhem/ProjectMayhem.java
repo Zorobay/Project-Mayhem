@@ -16,6 +16,11 @@ public class ProjectMayhem extends StateBasedGame {
 	static int yres;
 	static boolean isFullscreen;
 	private static final String TITLE = "Project Mayhem! v0.1";
+	
+	//Declare all state IDs
+	public static final int MAINMENU = 0;
+	
+	
 
 	// Declare all state IDs
 	private static final int MAINMENU = 0;
