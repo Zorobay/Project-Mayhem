@@ -39,6 +39,10 @@ public class MainMenu extends BasicGameState {
 		if (settings.isClicked()) {
 			sbg.enterState(1);
 		}
+		
+		if(play.isClicked()){
+			sbg.enterState(2);
+		}
 	}
 
 	public int getID() {
