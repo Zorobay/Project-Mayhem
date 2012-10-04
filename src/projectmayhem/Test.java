@@ -16,7 +16,7 @@ public class Test extends BasicGameState{
 	private TiledMap map;
 	private SpriteSheet left, right;
 	private Animation moveLeft, moveRight, character;
-	private float charX, charY, acc;
+	private float charX, charY, jump[];
 	private boolean platform[][];
 	private boolean isAirborn;
 	
@@ -25,7 +25,7 @@ public class Test extends BasicGameState{
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		charX = 0; charY = 576-64-32;
+		charX = 600; charY = 576-64-32;
 			
 		map = new TiledMap("graphics/maps/test.tmx");
 		
@@ -36,7 +36,14 @@ public class Test extends BasicGameState{
 		moveRight = new Animation(right, 200);
 		character = moveRight;
 		
-		acc = 0.1f;
+		jump = new float[960];
+		float dist = 0.3f;
+		float add = 0;
+		for(int i = 0; i<= 959; i++){
+			jump[i] = dist; 
+			dist += 0.3 - add;
+			add += 0.005;
+		}
 		platform = new boolean[map.getWidth()][map.getHeight()];
 		isAirborn = false;
 		
@@ -58,30 +65,36 @@ public class Test extends BasicGameState{
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		Input input = gc.getInput();
+		
+		if(!isPlatform(charX, charY) || isPlatform(charX + 32, charY-1)){ //anti gravity
+			charY += 0.2f*delta;
+		}
+		
 		if(input.isKeyDown(Input.KEY_RIGHT)){
 			character = moveRight;
 			charX += 0.1f*delta;
-			if(platform[((int)charX)/32][((int)charY)/32] || platform[((int)charX + 32)/32][((int)charY + 63)/32]){
+			if(isPlatform(charX + 32, charY-1)){
 				charX -= 0.1f*delta;
 			}
 		}
 		if(input.isKeyDown(Input.KEY_LEFT)){
 			character = moveLeft;
 			charX -= 0.1f*delta;
-			if(platform[((int)charX)/32][((int)charY)/32] || platform[((int)charX + 32)/32][((int)charY + 63)/32]){
+			if(isPlatform(charX, charY-1)){
 				charX += 0.1f*delta;
 			}
 		}
-		if(input.isKeyDown(Input.KEY_UP)){
-			charY -= 0.2f*delta;
-			acc = 0.1f;
+		if(input.isKeyPressed(Input.KEY_UP)){
 			isAirborn = true;
-		}
-		if(isAirborn){
-			if(platform[((int)charX)/32][((int)charY + 63)/32] != true){
-				charY += acc*delta;
-				acc += 0.0001;
+			float currentY = charY;
+			
+			for(int i = 0; i <= 959; i++){
+				charY -= jump[i];
 			}
+			
+			//while(charY >= currentY - 96f){
+				//charY -= 0.0000002f*delta;
+			//}
 		}
 		
 	}
@@ -91,7 +104,7 @@ public class Test extends BasicGameState{
 	}
 	
 	private boolean isPlatform(float x, float y){
-		return platform[(int)x][(int)y];
+		return platform[((int)x)/32][((int)y + 64)/32];
 	}
 
 }
