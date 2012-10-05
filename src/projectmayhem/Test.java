@@ -16,7 +16,7 @@ public class Test extends BasicGameState{
 	private TiledMap map;
 	private SpriteSheet left, right;
 	private Animation moveLeft, moveRight, character;
-	private float charX, charY, jump[];
+	private float charX, charY, acceleration;
 	private boolean platform[][];
 	private boolean isAirborn;
 	
@@ -36,14 +36,7 @@ public class Test extends BasicGameState{
 		moveRight = new Animation(right, 200);
 		character = moveRight;
 		
-		jump = new float[960];
-		float dist = 0.3f;
-		float add = 0;
-		for(int i = 0; i<= 959; i++){
-			jump[i] = dist; 
-			dist += 0.3 - add;
-			add += 0.005;
-		}
+		acceleration = 0.003f;
 		platform = new boolean[map.getWidth()][map.getHeight()];
 		isAirborn = false;
 		
@@ -55,20 +48,21 @@ public class Test extends BasicGameState{
 					platform[x][y] = true;
 					System.out.println("added value: " + platform[x][y] + " to location: " + x + " "+ y);
 				}
+				else{
+					platform[x][y] = false;
+				}
 			}
 		}
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		map.render(0, 0);
 		character.draw(charX, charY);
+		
+		g.drawString("CharX: " + charX + " CharY: " + charY, 400, 20);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		Input input = gc.getInput();
-		
-		if(!isPlatform(charX, charY) || isPlatform(charX + 32, charY-1)){ //anti gravity
-			charY += 0.2f*delta;
-		}
 		
 		if(input.isKeyDown(Input.KEY_RIGHT)){
 			character = moveRight;
@@ -86,15 +80,17 @@ public class Test extends BasicGameState{
 		}
 		if(input.isKeyPressed(Input.KEY_UP)){
 			isAirborn = true;
-			float currentY = charY;
-			
-			for(int i = 0; i <= 959; i++){
-				charY -= jump[i];
-			}
-			
-			//while(charY >= currentY - 96f){
-				//charY -= 0.0000002f*delta;
-			//}
+		}
+		
+		float y = charY;
+		if(isAirborn){
+			charY -= (0.2f - acceleration)*delta;
+			acceleration += 0.003f;
+		}
+		
+		if(isPlatform(charX, charY)){
+			isAirborn = false;
+			charY = y;
 		}
 		
 	}
@@ -104,6 +100,7 @@ public class Test extends BasicGameState{
 	}
 	
 	private boolean isPlatform(float x, float y){
+		System.out.println("x: " + x/32 + " y: " + y/32);
 		return platform[((int)x)/32][((int)y + 64)/32];
 	}
 
