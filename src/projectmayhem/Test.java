@@ -1,11 +1,13 @@
 package projectmayhem;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
@@ -13,12 +15,13 @@ import org.newdawn.slick.tiled.TiledMap;
 public class Test extends BasicGameState{
 	
 	private static int ID;
-	private TiledMap map;
+	public TestMap map;
 	private SpriteSheet left, right;
 	private Animation moveLeft, moveRight, character;
+	private Polygon playerPoly;
 	private float charX, charY, acceleration;
 	private boolean platform[][];
-	private boolean isAirborn;
+	private boolean isAirborn, collision;
 	
 	public Test(int ID){
 		this.ID = ID;
@@ -27,7 +30,7 @@ public class Test extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		charX = 600; charY = 576-64-32;
 			
-		map = new TiledMap("graphics/maps/test.tmx");
+		map = new TestMap("graphics/maps/test.tmx");
 		
 		left = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
 		right = new SpriteSheet("graphics/characters/moveright.png", 32, 64);
@@ -35,30 +38,24 @@ public class Test extends BasicGameState{
 		moveLeft = new Animation(left, 200);
 		moveRight = new Animation(right, 200);
 		character = moveRight;
+		character.setAutoUpdate(true);
 		
-		acceleration = 0.003f;
-		platform = new boolean[map.getWidth()][map.getHeight()];
+		collision = false;
 		isAirborn = false;
 		
-		for(int x = 0; x < map.getWidth(); x++){
-			for(int y = 0; y < map.getHeight(); y++){
-				int tiledID = map.getTileId(x, y, 0);
-				String value = map.getTileProperty(tiledID, "platform", "false");
-				if("true".equals(value)){
-					platform[x][y] = true;
-					System.out.println("added value: " + platform[x][y] + " to location: " + x + " "+ y);
-				}
-				else{
-					platform[x][y] = false;
-				}
-			}
-		}
+		playerPoly = new Polygon(new float[]
+		{charX, charY, 
+		charX + 32,charY,
+		charX + 32, charY + 64, 
+		charX, charY + 64});
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		map.render(0, 0);
+		TestMap.testMap.render(0, 0);
 		character.draw(charX, charY);
 		
-		g.drawString("CharX: " + charX + " CharY: " + charY, 400, 20);
+		g.setColor(Color.magenta);
+		g.draw(playerPoly);
+		g.drawString("CharX: " + String.format("%.3f", charX) + " CharY: " + String.format("%.3f", charY), 400, 20);
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
@@ -67,41 +64,51 @@ public class Test extends BasicGameState{
 		if(input.isKeyDown(Input.KEY_RIGHT)){
 			character = moveRight;
 			charX += 0.1f*delta;
-			if(isPlatform(charX + 32, charY-1)){
+			playerPoly.setX(charX);
+			if(entityCollision()){
 				charX -= 0.1f*delta;
+				playerPoly.setX(charX);
 			}
 		}
 		if(input.isKeyDown(Input.KEY_LEFT)){
 			character = moveLeft;
 			charX -= 0.1f*delta;
-			if(isPlatform(charX, charY-1)){
+			playerPoly.setX(charX);
+			if(entityCollision()){
 				charX += 0.1f*delta;
+				playerPoly.setX(charX);
 			}
 		}
-		if(input.isKeyPressed(Input.KEY_UP)){
-			isAirborn = true;
+		if(input.isKeyDown(Input.KEY_UP)){
+			charY -= 0.1f*delta;
+			playerPoly.setY(charY);
+			if(entityCollision()){
+				charY += 0.1f*delta;
+				playerPoly.setY(charY);
+			}
 		}
-		
-		float y = charY;
-		if(isAirborn){
-			charY -= (0.2f - acceleration)*delta;
-			acceleration += 0.003f;
-		}
-		
-		if(isPlatform(charX, charY)){
-			isAirborn = false;
-			charY = y;
+		if(input.isKeyDown(Input.KEY_DOWN)){
+			charY += 0.1f*delta;
+			playerPoly.setY(charY);
+			if(entityCollision()){
+				charY -= 0.1f*delta;
+				playerPoly.setY(charY);
+			}
 		}
 		
 	}
-
-	public int getID() {
-		return ID;
+	public boolean entityCollision() throws SlickException{
+		for(int i = 0; i < TestMap.blocks.size(); i++){
+			Block entity = (Block)TestMap.blocks.get(i);
+			if(playerPoly.intersects(entity.blockPoly)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
-	private boolean isPlatform(float x, float y){
-		System.out.println("x: " + x/32 + " y: " + y/32);
-		return platform[((int)x)/32][((int)y + 64)/32];
+	public int getID() {
+		return ID;
 	}
 
 }
