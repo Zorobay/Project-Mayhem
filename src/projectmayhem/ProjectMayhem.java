@@ -26,7 +26,7 @@ public class ProjectMayhem extends StateBasedGame {
 		super(name);
 		this.addState(new MainMenu(MAINMENU));
 		this.addState(new Settings(SETTINGS));
-		this.addState(new Test(TEST));
+		this.addState(new MapHandler(TEST));
 	}
 
 	public void initStatesList(GameContainer gc) throws SlickException {

@@ -12,18 +12,17 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
-public class Test extends BasicGameState{
+public class MapHandler extends BasicGameState{
 	
 	private static int ID;
 	public TestMap map;
 	private SpriteSheet left, right;
 	private Animation moveLeft, moveRight, character;
 	private Polygon playerPoly;
-	private float charX, charY, acceleration;
-	private boolean platform[][];
+	private float charX, charY, gravity;
 	private boolean isAirborn, collision;
 	
-	public Test(int ID){
+	public MapHandler(int ID){
 		this.ID = ID;
 	}
 	
@@ -56,6 +55,8 @@ public class Test extends BasicGameState{
 		g.setColor(Color.magenta);
 		g.draw(playerPoly);
 		g.drawString("CharX: " + String.format("%.3f", charX) + " CharY: " + String.format("%.3f", charY), 400, 20);
+		
+		
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
@@ -79,22 +80,27 @@ public class Test extends BasicGameState{
 				playerPoly.setX(charX);
 			}
 		}
-		if(input.isKeyDown(Input.KEY_UP)){
-			charY -= 0.1f*delta;
+		if(input.isKeyPressed(Input.KEY_UP)){
+			isAirborn = true;
+			gravity = 0;
+		}
+		if(isAirborn){
+			gravity += 0.0006f;
+			charY -= (0.3f - gravity)*delta;
 			playerPoly.setY(charY);
-			if(entityCollision()){
-				charY += 0.1f*delta;
+			
+			if(entityCollision() && gravity >= 0.3f){ //collision when falling
+				gravity = 0;
+				isAirborn = false;
+				charY -= 0.3f*delta;
+				playerPoly.setY(charY);
+			}
+			if(entityCollision() && gravity < 0.3f){ //collision when rising
+				charY += (0.3f - gravity)*delta;
 				playerPoly.setY(charY);
 			}
 		}
-		if(input.isKeyDown(Input.KEY_DOWN)){
-			charY += 0.1f*delta;
-			playerPoly.setY(charY);
-			if(entityCollision()){
-				charY -= 0.1f*delta;
-				playerPoly.setY(charY);
-			}
-		}
+		
 		
 	}
 	public boolean entityCollision() throws SlickException{

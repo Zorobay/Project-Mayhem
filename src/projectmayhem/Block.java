@@ -1,5 +1,6 @@
 package projectmayhem;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Polygon;
 
@@ -16,7 +17,8 @@ public class Block {
 		
 	}
 	
-	public void draw(Graphics g){
+	public void render(Graphics g){
+		g.setColor(Color.magenta);
 		g.draw(blockPoly);
 	}
 }

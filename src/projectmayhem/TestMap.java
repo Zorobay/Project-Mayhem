@@ -20,9 +20,10 @@ public class TestMap {
 		for(int x = 0; x < testMap.getWidth(); x++){
 			for (int y = 0; y < testMap.getHeight(); y++){
 				int tileID = testMap.getTileId(x, y, 0);
-				String tileType = testMap.getTileProperty(tileID, "platform", "true");
+				String tileType = testMap.getTileProperty(tileID, "platform", "false");
 				if(tileType.equals("true")){
 					blocks.add(new Block(x * 32, y * 32, platform, "platform"));
+					System.out.println("added new block att x:" + x + " y:" + y);
 				}
 			}
 		}
