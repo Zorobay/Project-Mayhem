@@ -19,8 +19,8 @@ public class MapHandler extends BasicGameState{
 	private SpriteSheet left, right;
 	private Animation moveLeft, moveRight, character;
 	private Polygon playerPoly;
-	private float charX, charY, gravity;
-	private boolean isAirborn, collision;
+	private float charX, charY, gravity, yVelocity;
+	private boolean isJumping, collision, isRising;
 	
 	public MapHandler(int ID){
 		this.ID = ID;
@@ -40,7 +40,7 @@ public class MapHandler extends BasicGameState{
 		character.setAutoUpdate(true);
 		
 		collision = false;
-		isAirborn = false;
+		isJumping = false;
 		
 		playerPoly = new Polygon(new float[]
 		{charX, charY, 
@@ -55,8 +55,13 @@ public class MapHandler extends BasicGameState{
 		g.setColor(Color.magenta);
 		g.draw(playerPoly);
 		g.drawString("CharX: " + String.format("%.3f", charX) + " CharY: " + String.format("%.3f", charY), 400, 20);
+		g.drawString("entityCollision: " + entityCollision(), 200, 20);
 		
-		
+		for(int i = 0; i < TestMap.blocks.size(); i++){
+			Block b = (Block)TestMap.blocks.get(i);
+			g.draw(b.blockPoly);
+
+		}
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
@@ -80,28 +85,21 @@ public class MapHandler extends BasicGameState{
 				playerPoly.setX(charX);
 			}
 		}
+		
 		if(input.isKeyPressed(Input.KEY_UP)){
-			isAirborn = true;
-			gravity = 0;
+			isJumping = true;
+			gravity = 0.15f; //rate at which the character falls.
+			yVelocity = 8f; //starting velocity
+			isRising = true;
 		}
-		if(isAirborn){
-			gravity += 0.0006f;
-			charY -= (0.3f - gravity)*delta;
-			playerPoly.setY(charY);
-			
-			if(entityCollision() && gravity >= 0.3f){ //collision when falling
-				gravity = 0;
-				isAirborn = false;
-				charY -= 0.3f*delta;
-				playerPoly.setY(charY);
-			}
-			if(entityCollision() && gravity < 0.3f){ //collision when rising
-				charY += (0.3f - gravity)*delta;
-				playerPoly.setY(charY);
+		if(isJumping){ 
+			yVelocity -= gravity;
+			charY -= yVelocity;
+			if(yVelocity < 0){
+				isRising = false;
 			}
 		}
-		
-		
+		//charY(t) = t^2 - 1000t
 	}
 	public boolean entityCollision() throws SlickException{
 		for(int i = 0; i < TestMap.blocks.size(); i++){
