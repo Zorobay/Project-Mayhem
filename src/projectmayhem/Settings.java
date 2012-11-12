@@ -8,6 +8,7 @@ import misc.Button;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
@@ -73,6 +74,11 @@ public class Settings extends BasicGameState{
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
+		Input input = gc.getInput();
+		if(input.isKeyPressed(Input.KEY_B)){
+			sbg.enterState(0);
+		}
+		
 		if(fullscreenon.isClicked()){
 			gc.setFullscreen(false);
 		}

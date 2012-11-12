@@ -17,7 +17,7 @@ public class Button {
 	static final int MIDTOP = -4; static final int LEFTTOP= -5; static final int RIGHTTOP = -6;
 	static final int MIDBOT = -7; static final int LEFTBOT= -8; static final int RIGHTBOT = -9;
 	
-	public Button(Image def, Image hover, int x, int xoffset, int y, int yoffset, GameContainer gc){
+	public Button(Image def, Image hover, int x, int xoffset, int y, int yoffset, GameContainer gc){ //all, with offsets
 		this.def = def;
 		this.hover = hover;
 		this.gc = gc;
@@ -51,7 +51,7 @@ public class Button {
 		}
 	}
 	
-	public Button(Image def, Image hover, int x, int y, GameContainer gc){
+	public Button(Image def, Image hover, int x, int y, GameContainer gc){ //all, except offsets
 		this.def = def;
 		this.hover = hover;
 		this.gc = gc;
@@ -83,7 +83,7 @@ public class Button {
 		}
 	}
 	
-	public Button(Image def, int x, int y, GameContainer gc){
+	public Button(Image def, int x, int y, GameContainer gc){ //A static image and no offsets
 		this.def = def;
 		hover = null;
 		this.gc = gc;
@@ -115,7 +115,7 @@ public class Button {
 		}
 	}
 	
-	public Button(Image def, int x, int xoffset, int y, int yoffset, GameContainer gc){
+	public Button(Image def, int x, int xoffset, int y, int yoffset, GameContainer gc){ //A static image with offsets
 		this.def = def;
 		this.hover = null;
 		this.gc = gc;

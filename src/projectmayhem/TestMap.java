@@ -23,7 +23,6 @@ public class TestMap {
 				String tileType = testMap.getTileProperty(tileID, "platform", "false");
 				if(tileType.equals("true")){
 					blocks.add(new Block(x * 32, y * 32, platform, "platform"));
-					System.out.println("added new block att x:" + x + " y:" + y);
 				}
 			}
 		}

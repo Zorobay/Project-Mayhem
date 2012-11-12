@@ -12,21 +12,21 @@ import org.newdawn.slick.state.StateBasedGame;
 public class MainMenu extends BasicGameState {
 
 	public static int ID;
-
+	
+	Image mainmenubuttons;
 	Button play, settings;
 
 	public MainMenu(int ID) {
 		this.ID = ID;
 	}
 
-	public void init(GameContainer gc, StateBasedGame sbg)
-			throws SlickException {
-		play = new Button(new Image("graphics/buttons/textplaybutton.png"),
-				new Image("graphics/buttons/textplaybuttonhover.png"),
+	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		mainmenubuttons = new Image("graphics/buttons/mainmenu.png");
+		
+		play = new Button(mainmenubuttons.getSubImage(0, 0, 117, 34),
+				mainmenubuttons.getSubImage(0, 34, 117, 34),
 				Button.MID(), Button.MID(), gc);
-		settings = new Button(new Image(
-				"graphics/buttons/textsettingsbutton.png"), new Image(
-				"graphics/buttons/textsettingsbuttonhover.png"), Button.MID(),
+		settings = new Button(mainmenubuttons.getSubImage(0, 68, 216, 34), mainmenubuttons.getSubImage(0, 102, 216, 34), Button.MID(),
 				0, Button.MID(), 90, gc);
 	}
 
