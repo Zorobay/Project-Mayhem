@@ -20,8 +20,8 @@ public class MapHandler extends BasicGameState{
 	private SpriteSheet left, right, partic;
 	private Animation moveLeft, moveRight, character;
 	private Polygon playerPoly;
-	private float charX, charY, yVelocity;
-	private boolean isJumping, collision, isOnGround;
+	private float charX, charY, yVelocity, delta;
+	private boolean isJumping, collision, isOnGround, showStats;
 	private Block collisionBlock;
 	
 	public MapHandler(int ID){
@@ -29,6 +29,8 @@ public class MapHandler extends BasicGameState{
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		gc.setUpdateOnlyWhenVisible(false);
+		
 		charX = 600; charY = 576-64-38;
 			
 		map = new TestMap("graphics/maps/test.tmx");
@@ -43,6 +45,7 @@ public class MapHandler extends BasicGameState{
 		
 		collision = false;
 		isJumping = false;
+		showStats = true;
 		
 		playerPoly = new Polygon(new float[]
 		{charX, charY, 
@@ -55,23 +58,36 @@ public class MapHandler extends BasicGameState{
 		character.draw(charX, charY);
 		
 		g.setColor(Color.magenta);
-		g.draw(playerPoly);
-		g.drawString("CharX: " + String.format("%.3f", charX) + " CharY: " + String.format("%.3f", charY), 0, 30);
-		g.drawString("entityCollision: " + entityCollision(), 0, 50);
-		g.drawString("yVelocity: " + yVelocity, 0, 70);
-		g.drawString("isJumping: " + isJumping, 0, 90);
-		g.drawString("isOnGround: " + isOnGround, 0, 110);
-		g.drawString("playerPoly Y: " + playerPoly.getY(), 0, 130);
-		
-		for(int i = 0; i < TestMap.blocks.size(); i++){
-			Block b = (Block)TestMap.blocks.get(i);
-			g.draw(b.blockPoly);
-
+		if(showStats){
+			g.draw(playerPoly);
+			g.drawString("CharX: " + String.format("%.3f", charX) + " CharY: " + String.format("%.3f", charY), 0, 30);
+			g.drawString("entityCollision: " + entityCollision(), 0, 50);
+			g.drawString("yVelocity: " + yVelocity, 0, 70);
+			g.drawString("isJumping: " + isJumping, 0, 90);
+			g.drawString("isOnGround: " + isOnGround, 0, 110);
+			g.drawString("playerPoly Y: " + playerPoly.getY(), 0, 130);
+			g.drawString("delta: "  + this.delta, 0, 150);
+			
+			for(int i = 0; i < TestMap.blocks.size(); i++){
+				Block b = (Block)TestMap.blocks.get(i);
+				g.draw(b.blockPoly);
+			}
 		}
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		this.delta = delta;
+		
 		Input input = gc.getInput();
+		
+		if(input.isKeyPressed(Input.KEY_S)){
+			if(showStats){
+				showStats = false;
+			}
+			else{
+				showStats = true;
+			}
+		}
 		
 		if(input.isKeyDown(Input.KEY_RIGHT)){
 			character = moveRight;
@@ -81,8 +97,8 @@ public class MapHandler extends BasicGameState{
 				charX -= 0.2f*delta;
 				playerPoly.setX(charX);
 			}
-			
 		}
+		
 		if(input.isKeyDown(Input.KEY_LEFT)){
 			character = moveLeft;
 			charX -= 0.2f*delta;
@@ -91,7 +107,6 @@ public class MapHandler extends BasicGameState{
 				charX += 0.2f*delta;
 				playerPoly.setX(charX);
 			}
-			
 		}
 		
 		if(input.isKeyPressed(Input.KEY_UP) && isJumping == false){ //you can jump as long as you're not airborne
@@ -100,7 +115,7 @@ public class MapHandler extends BasicGameState{
 			yVelocity = 2.0f;
 		}
 		if(isJumping){
-			yVelocity -= 0.01f;
+			yVelocity -= 0.01f*delta;
 			charY -= yVelocity*delta;
 			playerPoly.setY(charY);
 			if(entityCollision()){
@@ -108,7 +123,7 @@ public class MapHandler extends BasicGameState{
 					charY = collisionBlock.blockPoly.getMaxY();
 				}
 				else{
-					charY = collisionBlock.blockPoly.getMinY() - 65;
+					charY = collisionBlock.blockPoly.getMinY() - (playerPoly.getHeight()+1);
 					isJumping = false;
 					isOnGround = true;
 				}
@@ -120,11 +135,13 @@ public class MapHandler extends BasicGameState{
 		playerPoly.setY(charY + 1); //check if player is only 1 pixel above ground
 		if(entityCollision()){
 			isOnGround = true;
-			charY = collisionBlock.blockPoly.getMinY() -65;
+			isJumping = false;
+			yVelocity = 0;
+			charY = collisionBlock.blockPoly.getMinY() - (playerPoly.getHeight()+1);
 			playerPoly.setY(charY);
 		}
 		else if(isJumping == false){ //if not, then accelerate player downwards
-			yVelocity += 0.01f;
+			yVelocity += 0.01f*delta;
 			charY += yVelocity*delta;
 			playerPoly.setY(charY);
 		}
