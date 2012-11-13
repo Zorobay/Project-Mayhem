@@ -21,7 +21,7 @@ public class MapHandler extends BasicGameState{
 	private Animation moveLeft, moveRight, character;
 	private Polygon playerPoly;
 	private float charX, charY, yVelocity, delta;
-	private boolean isJumping, collision, isOnGround, showStats;
+	private boolean isJumping, isOnGround, showStats;
 	private Block collisionBlock;
 	
 	public MapHandler(int ID){
@@ -29,10 +29,6 @@ public class MapHandler extends BasicGameState{
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-		gc.setUpdateOnlyWhenVisible(false);
-		
-		charX = 600; charY = 576-64-38;
-			
 		map = new TestMap("graphics/maps/test.tmx");
 		
 		left = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
@@ -43,20 +39,26 @@ public class MapHandler extends BasicGameState{
 		character = moveRight;
 		character.setAutoUpdate(true);
 		
-		collision = false;
 		isJumping = false;
 		showStats = true;
 		
+		// DEFINE PLAYER POLY
 		playerPoly = new Polygon(new float[]
 		{charX, charY, 
 		charX + 32,charY,
 		charX + 32, charY + 64, 
 		charX, charY + 64});
+		//--------------------------
+		
+		charX = 600; charY = 576-64-32;
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		// RENDER CHARACTER AND MAP
 		TestMap.testMap.render(0, 0);
 		character.draw(charX, charY);
+		//-------------------------
 		
+		// RENDER OPTIONAL STATS
 		g.setColor(Color.magenta);
 		if(showStats){
 			g.draw(playerPoly);
@@ -73,13 +75,14 @@ public class MapHandler extends BasicGameState{
 				g.draw(b.blockPoly);
 			}
 		}
+		//----------------------
 	}
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		this.delta = delta;
-		
 		Input input = gc.getInput();
 		
+		// TOGGLE STATS
 		if(input.isKeyPressed(Input.KEY_S)){
 			if(showStats){
 				showStats = false;
@@ -88,7 +91,9 @@ public class MapHandler extends BasicGameState{
 				showStats = true;
 			}
 		}
+		//-------------------------------
 		
+		// MOVE THE CHARACTER RIGHT
 		if(input.isKeyDown(Input.KEY_RIGHT)){
 			character = moveRight;
 			charX += 0.2f*delta;
@@ -98,7 +103,9 @@ public class MapHandler extends BasicGameState{
 				playerPoly.setX(charX);
 			}
 		}
+		//--------------------------------
 		
+		// MOVE THE CHARACTER LEFT
 		if(input.isKeyDown(Input.KEY_LEFT)){
 			character = moveLeft;
 			charX -= 0.2f*delta;
@@ -108,12 +115,15 @@ public class MapHandler extends BasicGameState{
 				playerPoly.setX(charX);
 			}
 		}
+		//--------------------------------
 		
+		// START JUMPING
 		if(input.isKeyPressed(Input.KEY_UP) && isJumping == false){ //you can jump as long as you're not airborne
 			isJumping = true;
-			isOnGround = false;
+			//isOnGround = false;
 			yVelocity = 2.0f;
 		}
+		// STARTS THE JUMP LOOP
 		if(isJumping){
 			yVelocity -= 0.01f*delta;
 			charY -= yVelocity*delta;
@@ -125,26 +135,29 @@ public class MapHandler extends BasicGameState{
 				else{
 					charY = collisionBlock.blockPoly.getMinY() - (playerPoly.getHeight()+1);
 					isJumping = false;
-					isOnGround = true;
+					//isOnGround = true;
 				}
 				yVelocity = 0;
 				playerPoly.setY(charY);
 			}
 		}
+		//---------------------------
 		
+		// CHECKS IF THE CHARACTER IS ON THE GROUND
 		playerPoly.setY(charY + 1); //check if player is only 1 pixel above ground
 		if(entityCollision()){
-			isOnGround = true;
+			//isOnGround = true;
 			isJumping = false;
 			yVelocity = 0;
 			charY = collisionBlock.blockPoly.getMinY() - (playerPoly.getHeight()+1);
 			playerPoly.setY(charY);
-		}
-		else if(isJumping == false){ //if not, then accelerate player downwards
+		} // IF NOT, ACCELERATE DOWNWARD
+		else if(isJumping == false){ 
 			yVelocity += 0.01f*delta;
 			charY += yVelocity*delta;
 			playerPoly.setY(charY);
 		}
+		//---------------------------------
 	}
 	
 	
