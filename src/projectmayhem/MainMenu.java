@@ -14,7 +14,7 @@ public class MainMenu extends BasicGameState {
 	public static int ID;
 	
 	Image mainmenubuttons;
-	Button play, settings;
+	Button play, settings, back;
 
 	public MainMenu(int ID) {
 		this.ID = ID;
@@ -28,12 +28,15 @@ public class MainMenu extends BasicGameState {
 				Button.MID(), Button.MID(), gc);
 		settings = new Button(mainmenubuttons.getSubImage(0, 68, 216, 34), mainmenubuttons.getSubImage(0, 102, 216, 34), Button.MID(),
 				0, Button.MID(), 90, gc);
+		back = new Button(mainmenubuttons.getSubImage(0, 136, 132, 34), mainmenubuttons.getSubImage(0, 170, 132, 34), Button.MID(),
+				0, Button.MID(), 180, gc);
 	}
 
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g)
 			throws SlickException {
 		play.getGraphics().draw(play.getX(), play.getY());
 		settings.getGraphics().draw(settings.getX(), settings.getY());
+		back.getGraphics().draw(back.getX(),back.getY());
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if (settings.isClicked()) {
@@ -42,6 +45,9 @@ public class MainMenu extends BasicGameState {
 		
 		if(play.isClicked()){
 			sbg.enterState(2);
+		}
+		if(back.isClicked()){
+			gc.exit();
 		}
 	}
 

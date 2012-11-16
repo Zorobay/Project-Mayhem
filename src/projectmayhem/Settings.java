@@ -22,6 +22,7 @@ public class Settings extends BasicGameState{
 	Image settingsmenu;
 	Button fullscreenon, fullscreenoff;
 	Button resolution;
+	Button back;
 	UnicodeFont font;
 	String resolutionString;
 	Dimension resList4_3[], resList16_9[], resList5_4[];
@@ -57,7 +58,8 @@ public class Settings extends BasicGameState{
 		fullscreenon = new Button(settingsmenu.getSubImage(0, 0, 232, 28), settingsmenu.getSubImage(0, 28, 232, 28), Button.MID(), Button.MID(), gc);
 		fullscreenoff = new Button(settingsmenu.getSubImage(0, 56, 246, 28), settingsmenu.getSubImage(0, 84, 246, 28), Button.MID(), Button.MID(), gc);
 		resolution = new Button(settingsmenu.getSubImage(0, 139, 113, 27), settingsmenu.getSubImage(0, 166, 113, 27), Button.MID(),0, Button.MID(),40, gc);
-
+		back = new Button(settingsmenu.getSubImage(0, 112, 64, 27),settingsmenu.getSubImage(0, 112, 64, 27),Button.MID(),0,Button.MID(), 80, gc);
+		
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		if(gc.isFullscreen()){
@@ -67,9 +69,9 @@ public class Settings extends BasicGameState{
 			fullscreenoff.getGraphics().draw(fullscreenoff.getX(), fullscreenoff.getY());
 		}
 		
-		resolution.getGraphics().draw(fullscreenon.getX(), resolution.getY());
+		resolution.getGraphics().draw(resolution.getX(), resolution.getY());
 		font.drawString(resolution.getX() + resolution.getWidth() + 5, resolution.getY(), resolutionString);
-		
+		back.getGraphics().draw(back.getX(), back.getY());
 		
 	}
 	
@@ -79,11 +81,15 @@ public class Settings extends BasicGameState{
 			sbg.enterState(0);
 		}
 		
-		if(fullscreenon.isClicked()){
-			gc.setFullscreen(false);
+		if(gc.isFullscreen()){
+			if(fullscreenon.isClicked()){
+				gc.setFullscreen(false);
+			}
 		}
-		if(fullscreenoff.isClicked()){
-			gc.setFullscreen(true);
+		else{
+			if(fullscreenoff.isClicked()){
+				gc.setFullscreen(true);
+			}
 		}
 		
 		if(resolution.isClicked()){
@@ -145,8 +151,13 @@ public class Settings extends BasicGameState{
 				newY = (int) resList16_9[arrayPos].getHeight();
 			}
 			ProjectMayhem.setResolution(newX, newY);
+			resolutionString = gc.getWidth() + "x" + gc.getHeight();
 			System.out.println("Setting resolution to: " + newX + "x" + newY);
 		}
+		if(back.isClicked()){
+			sbg.enterState(0);
+		}
+			
 	}
 	
 	public int getID(){
