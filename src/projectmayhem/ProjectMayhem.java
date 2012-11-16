@@ -20,19 +20,19 @@ public class ProjectMayhem extends StateBasedGame {
 	// Declare all state IDs
 	private static final int MAINMENU = 0;
 	private static final int SETTINGS = 1;
-	private static final int TEST = 2;
+	private static final int MAPHANDLER = 2;
 
 	public ProjectMayhem(String name) {
 		super(name);
 		this.addState(new MainMenu(MAINMENU));
 		this.addState(new Settings(SETTINGS));
-		this.addState(new MapHandler(TEST));
+		this.addState(new MapHandler(MAPHANDLER));
 	}
 
 	public void initStatesList(GameContainer gc) throws SlickException {
 		this.getState(MAINMENU).init(gc, this);
 		this.getState(SETTINGS).init(gc, this);
-		this.getState(TEST).init(gc, this);
+		this.getState(MAPHANDLER).init(gc, this);
 		this.enterState(MAINMENU);
 	}
 

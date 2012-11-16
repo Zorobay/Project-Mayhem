@@ -16,9 +16,4 @@ public class Block {
 		blockName = type;
 		
 	}
-	
-	public void render(Graphics g){
-		g.setColor(Color.magenta);
-		g.draw(blockPoly);
-	}
 }
