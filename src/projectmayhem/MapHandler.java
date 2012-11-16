@@ -46,10 +46,13 @@ public class MapHandler extends BasicGameState{
 		isJumping = false;
 		showStats = true;
 		
+<<<<<<< HEAD
 		// SET STABLE FRAMERATE
 		gc.setTargetFrameRate(60);
 		//-------------------------
 
+=======
+>>>>>>> ca9d94c0ed41f336e4517ed743c9b196c603babe
 		// DEFINE PLAYER POLY
 		playerPoly = new Polygon(new float[]
 		{charX, charY, 
@@ -129,7 +132,11 @@ public class MapHandler extends BasicGameState{
 		if(input.isKeyPressed(Input.KEY_UP) && isJumping == false){ //you can jump as long as you're not airborne
 			isJumping = true;
 			//isOnGround = false;
+<<<<<<< HEAD
 			yVelocity = VERTICAL_STARTING_VELOCITY;
+=======
+			yVelocity = 2.0f;
+>>>>>>> ca9d94c0ed41f336e4517ed743c9b196c603babe
 		}
 		// STARTS THE JUMP LOOP
 		if(isJumping){
@@ -161,7 +168,11 @@ public class MapHandler extends BasicGameState{
 			playerPoly.setY(charY);
 		} // IF NOT, ACCELERATE DOWNWARD
 		else if(isJumping == false){ 
+<<<<<<< HEAD
 			yVelocity += VERTICAL_GRAVITY*delta;
+=======
+			yVelocity += 0.01f*delta;
+>>>>>>> ca9d94c0ed41f336e4517ed743c9b196c603babe
 			charY += yVelocity*delta;
 			playerPoly.setY(charY);
 		}

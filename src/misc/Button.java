@@ -170,7 +170,7 @@ public class Button {
 	public boolean isClicked(){
 		Input input = gc.getInput();
 		if((input.getMouseX() >= x && input.getMouseX() <= x + def.getWidth()) && (input.getMouseY() > y && input.getMouseY() < y + def.getHeight())){ //Check to see if mouse is over button
-			if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON)){
+			if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 				return true;
 			}
 		}
