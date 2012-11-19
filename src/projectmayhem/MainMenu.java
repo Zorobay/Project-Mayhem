@@ -14,7 +14,7 @@ public class MainMenu extends BasicGameState {
 	public static int ID;
 	
 	Image mainmenubuttons;
-	Button play, settings, back;
+	Button play, settings, exit;
 
 	public MainMenu(int ID) {
 		this.ID = ID;
@@ -23,12 +23,14 @@ public class MainMenu extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
 		mainmenubuttons = new Image("graphics/buttons/mainmenu.png");
 		
-		play = new Button(mainmenubuttons.getSubImage(0, 0, 117, 34),
-				mainmenubuttons.getSubImage(0, 34, 117, 34),
+		play = new Button(mainmenubuttons.getSubImage(0, 0, 106, 31),
+				mainmenubuttons.getSubImage(0, 31, 105, 31),
 				Button.MID(), Button.MID(), gc);
-		settings = new Button(mainmenubuttons.getSubImage(0, 68, 216, 34), mainmenubuttons.getSubImage(0, 102, 216, 34), Button.MID(),
+		settings = new Button(mainmenubuttons.getSubImage(0, 62, 192, 31), 
+				mainmenubuttons.getSubImage(0, 93, 192, 31), Button.MID(),
 				0, Button.MID(), 90, gc);
-		back = new Button(mainmenubuttons.getSubImage(0, 136, 132, 34), mainmenubuttons.getSubImage(0, 170, 132, 34), Button.MID(),
+		exit = new Button(mainmenubuttons.getSubImage(0, 124, 83, 31), 
+				mainmenubuttons.getSubImage(0, 155, 83, 31), Button.MID(),
 				0, Button.MID(), 180, gc);
 	}
 
@@ -36,7 +38,7 @@ public class MainMenu extends BasicGameState {
 			throws SlickException {
 		play.getGraphics().draw(play.getX(), play.getY());
 		settings.getGraphics().draw(settings.getX(), settings.getY());
-		back.getGraphics().draw(back.getX(),back.getY());
+		exit.getGraphics().draw(exit.getX(),exit.getY());
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if (settings.isClicked()) {
@@ -46,7 +48,7 @@ public class MainMenu extends BasicGameState {
 		if(play.isClicked()){
 			sbg.enterState(2);
 		}
-		if(back.isClicked()){
+		if(exit.isClicked()){
 			gc.exit();
 		}
 	}

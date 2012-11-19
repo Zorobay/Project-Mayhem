@@ -1,5 +1,7 @@
 package projectmayhem;
 
+import java.io.IOException;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -23,6 +25,7 @@ public class MapHandler extends BasicGameState{
 	private float charX, charY, yVelocity, delta;
 	private boolean isJumping, isOnGround, showStats;
 	private Block collisionBlock;
+	private Missile missile;
 	
 	private final float HORISONTAL_VELOCITY = 0.25f;
 	private final float VERTICAL_STARTING_VELOCITY = 1.5f;
@@ -33,6 +36,12 @@ public class MapHandler extends BasicGameState{
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		try {
+			missile = new Missile("graphics/particles/redblueparticle");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		map = new TestMap("graphics/maps/test.tmx");
 		
 		left = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
@@ -46,13 +55,11 @@ public class MapHandler extends BasicGameState{
 		isJumping = false;
 		showStats = true;
 		
-<<<<<<< HEAD
+
 		// SET STABLE FRAMERATE
 		gc.setTargetFrameRate(60);
 		//-------------------------
 
-=======
->>>>>>> ca9d94c0ed41f336e4517ed743c9b196c603babe
 		// DEFINE PLAYER POLY
 		playerPoly = new Polygon(new float[]
 		{charX, charY, 
@@ -64,6 +71,8 @@ public class MapHandler extends BasicGameState{
 		charX = 600; charY = 576-64-32;
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		missile.getParticle().render();
+		
 		// RENDER CHARACTER AND MAP
 		TestMap.testMap.render(0, 0);
 		character.draw(charX, charY);
@@ -132,11 +141,8 @@ public class MapHandler extends BasicGameState{
 		if(input.isKeyPressed(Input.KEY_UP) && isJumping == false){ //you can jump as long as you're not airborne
 			isJumping = true;
 			//isOnGround = false;
-<<<<<<< HEAD
 			yVelocity = VERTICAL_STARTING_VELOCITY;
-=======
 			yVelocity = 2.0f;
->>>>>>> ca9d94c0ed41f336e4517ed743c9b196c603babe
 		}
 		// STARTS THE JUMP LOOP
 		if(isJumping){
@@ -168,11 +174,8 @@ public class MapHandler extends BasicGameState{
 			playerPoly.setY(charY);
 		} // IF NOT, ACCELERATE DOWNWARD
 		else if(isJumping == false){ 
-<<<<<<< HEAD
 			yVelocity += VERTICAL_GRAVITY*delta;
-=======
 			yVelocity += 0.01f*delta;
->>>>>>> ca9d94c0ed41f336e4517ed743c9b196c603babe
 			charY += yVelocity*delta;
 			playerPoly.setY(charY);
 		}

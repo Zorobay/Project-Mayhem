@@ -1,12 +1,17 @@
 package projectmayhem;
 
+import java.io.IOException;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 
 public class Missile {
 	
 	private Image alive, death, active;
 	private Animation aliveAnim, deathAnim;
+	private ParticleSystem particleSystem;
 	private boolean isAlive;
 	private float x, y;
 	
@@ -17,6 +22,13 @@ public class Missile {
 	public Missile(Animation alive, Animation death){
 		aliveAnim = alive;
 		deathAnim = death;
+	}
+	public Missile(String path) throws IOException{
+		particleSystem = ParticleIO.loadConfiguredSystem(path);
+	}
+	
+	public ParticleSystem getParticle(){
+		return particleSystem;
 	}
 	
 	public Image getImage(){
