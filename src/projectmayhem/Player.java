@@ -10,17 +10,19 @@ public class Player {
 	
 	private float x,y;
 	private float velocityX, velocityY;
-	private boolean isJumping;
+	private boolean isJumping, isAlive;
 	private String name;
 	private TestCharacter playerCharacter;
 	private Polygon poly;
 	private Animation playerLeft, playerRight, playerJump, playerIdle, character;
-	private int rightKey, leftKey, jumpKey;
+	private int rightKey, leftKey, jumpKey, attack1Key;
 	private int currentHealth, maxHealth;
+	private int reviveTime;
 	public static final int IDLE = 0; public static final int LEFT = 1; public static final int RIGHT = 2; public static final int JUMP = 3;
 	
 	public Player(String name){
 		this.name = name;
+		isAlive = true;
 		
 		try {
 			playerCharacter = new TestCharacter();
@@ -33,6 +35,9 @@ public class Player {
 		playerJump = new Animation(playerCharacter.getJumpSprite(), 200);
 		playerIdle = new Animation(playerCharacter.getIdleSprite(), 200);
 		character = playerIdle;
+	}
+	public void triggerAttack1(){
+		playerCharacter.performAttack1(poly);
 	}
 	
 	public void setX(float xpos){
@@ -72,6 +77,12 @@ public class Player {
 	public void setMaxHealth(int health){
 		maxHealth = health;
 	}
+	public void setAlive(boolean alive){
+		isAlive = alive;
+	}
+	public void setReviveTime(int time){
+		reviveTime = time;
+	}
 	
 	//SET METHODS FOR KEY CONFIG
 	public void setMoveRightKey(int key){
@@ -83,8 +94,11 @@ public class Player {
 	public void setJumpKey(int key){
 		jumpKey = key;
 	}
-	//------------------------------
+	public void setAttack1Key(int key){
+		attack1Key = key;
+	}
 	
+	//-----------------------------
 	public float getX(){
 		return x;
 	}
@@ -118,8 +132,17 @@ public class Player {
 	public int getCurrentHealth(){
 		return currentHealth;
 	}
+	public boolean isAlive(){
+		return isAlive;
+	}
+	public int getReviveTime(){
+		return reviveTime;
+	}
 	public float getCenterX(){
 		return  x + poly.getWidth() / 2;
+	}
+	public String getName(){
+		return name;
 	}
 	
 	//GET METHODS FOR KEY CONFIG
@@ -131,6 +154,9 @@ public class Player {
 	}
 	public int getJumpKey(){
 		return jumpKey;
+	}
+	public int getAttack1Key(){
+		return attack1Key;
 	}
 	
 	//public void setCharacter(Character character){

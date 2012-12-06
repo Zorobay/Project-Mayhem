@@ -1,20 +1,14 @@
 package projectmayhem;
 
-import java.io.IOException;
-
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.particles.Particle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.tiled.TiledMap;
+import maps.*;
 
 public class MapHandler extends BasicGameState{
 	
@@ -47,6 +41,7 @@ public class MapHandler extends BasicGameState{
 		player1.setMoveRightKey(Input.KEY_RIGHT);
 		player1.setMoveLeftKey(Input.KEY_LEFT);
 		player1.setJumpKey(Input.KEY_UP);
+		player1.setAttack1Key(Input.KEY_SPACE);
 		player2.setMoveRightKey(Input.KEY_D);
 		player2.setMoveLeftKey(Input.KEY_A);
 		player2.setJumpKey(Input.KEY_W);
@@ -56,20 +51,23 @@ public class MapHandler extends BasicGameState{
 		player2.setMaxHealth(100);
 		player2.setCurrentHealth(100);
 		//----------------------------
-		
+
 		// SET STABLE FRAMERATE
-		gc.setTargetFrameRate(60);
+		gc.setTargetFrameRate(100);
 		//-------------------------
 		
-		player1.setX(600); player1.setY(576-64-32); //TODO This should be independent of player character size
-		player2.setX(200); player2.setY(576-64-32);
+		player1.setX(map.getSpawn1(0)); player1.setY(map.getSpawn1(1)); //TODO This should be independent of player character size
+		player2.setX(map.getSpawn2(0)); player2.setY(map.getSpawn2(1));
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-		
+		g.setAntiAlias(true);
 		// RENDER CHARACTER AND MAP
-		TestMap.testMap.render(0, 0);
+		map.map.render(0, 0);
 		player1.getAnimation().draw(player1.getX(), player1.getY());
 		player2.getAnimation().draw(player2.getX(), player2.getY());
+		g.setColor(Color.white);
+		g.drawString(player1.getName(), player1.getCenterX() - (int)(g.getFont().getWidth(player1.getName())/2), player1.getY() - g.getFont().getLineHeight());
+		g.drawString(player2.getName(), player2.getCenterX() - (int)(g.getFont().getWidth(player2.getName())/2), player2.getY() - g.getFont().getLineHeight());
 		//-------------------------
 		
 		// RENDER OPTIONAL STATS
@@ -81,6 +79,7 @@ public class MapHandler extends BasicGameState{
 			g.drawString("yVelocity: " + player1.getYVelocity(), 0, 50);
 			g.drawString("isJumping: " + player1.isJumping(), 0, 70);
 			g.drawString("playerPoly Y: " + player1.getPolyY(), 0, 90);
+			g.drawString("isAlive: " + player1.isAlive(), 0, 110);
 			//----------------------------------
 			
 			//RENDER PLAYER 2 STATS
@@ -89,22 +88,19 @@ public class MapHandler extends BasicGameState{
 			g.drawString("yVelocity: " + player2.getYVelocity(), 600, 50);
 			g.drawString("isJumping: " + player2.isJumping(), 600, 70);
 			g.drawString("playerPoly Y: " + player2.getPolyY(), 600, 90);
+			g.drawString("isAlive: " + player2.isAlive(), 600, 110);
 			//----------------------------------
 			
 			//RENDER MISC STATS
 			g.drawString("delta: "  + this.delta, 400, 30);
 			//----------------------------------
 			
-			for(int i = 0; i < TestMap.blocks.size(); i++){
-				Block b = (Block)TestMap.blocks.get(i);
+			for(int i = 0; i < map.getBlock().size(); i++){
+				Block b = (Block)map.getBlock().get(i);
 				g.draw(b.blockPoly);
 			}
 		}
-		//RENDER PLAYER HEALTH
-		g.setColor(Color.red);
-		g.drawRect(player1.getCenterX() - (25), player1.getY()-12, player1.getCurrentHealth() / 2, 10);
 	}
-
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		this.delta = delta;
 		Input input = gc.getInput();
@@ -120,47 +116,54 @@ public class MapHandler extends BasicGameState{
 		}
 		//-------------------------------
 		
-		// MOVE PLAYER 1 RIGHT
+		//CHECK IF PLAYERS ARE ALIVE
+		if(player1.getY() >= map.getKillY()){
+			player1.setAlive(false);
+		}
+		if(player2.getY() >= map.getKillY()){
+			player2.setAlive(false);
+		}
+		//--------------------------------
+		
+		//REVIVE PLAYERS
+		if(player1.isAlive() == false){
+			if(player1.getReviveTime() >= 1000){
+				player1.setAlive(true);
+				player1.setX(map.getSpawn1(0));
+				player1.setY(map.getSpawn1(1));
+				player1.setReviveTime(0);
+			}
+			player1.setReviveTime(player1.getReviveTime() + delta);
+		}
+		if(player2.isAlive() == false){
+			if(player2.getReviveTime() >= 1000){
+				player2.setAlive(true);
+				player2.setX(map.getSpawn2(0));
+				player2.setY(map.getSpawn2(1));
+				player2.setReviveTime(0);
+			}
+			player2.setReviveTime(player2.getReviveTime() + delta);
+		}
+		//--------------------------------------
+		
+		// PLAYER 1 MOVEMENT AND ATTACKS
+		if(input.isKeyDown(player1.getAttack1Key())){
+			player1.triggerAttack1();
+		}
 		if(input.isKeyDown(player1.getMoveRightKey())){
-			player1.setAnimation(Player.RIGHT);
-			player1.setX(player1.getX() + HORISONTAL_VELOCITY*delta);
-			player1.setAnimation(Player.RIGHT);
-			if(entityCollision(player1.getPolygon())){
-				player1.setX(player1.getX() - HORISONTAL_VELOCITY*delta);
-			}
+			moveRight(player1);
 		}
-		//--------------------------------
-		
-		// MOVE PLAYER 1 LEFT
 		if(input.isKeyDown(player1.getMoveLeftKey())){
-			player1.setAnimation(Player.LEFT);
-			player1.setX(player1.getX() - HORISONTAL_VELOCITY*delta);
-			if(entityCollision(player1.getPolygon())){
-			player1.setX(player1.getX() + HORISONTAL_VELOCITY*delta);
-			}
+			moveLeft(player1);
 		}
-		//--------------------------------
-		
 		// START JUMP FOR PLAYER 1
 		if(input.isKeyPressed(Input.KEY_UP) && player1.isJumping() == false){ //you can jump as long as you're not airborne
 			player1.setIsJumping(true);
-			//isOnGround = false;
 			player1.setYVelocity(VERTICAL_STARTING_VELOCITY);
 		}
 		// STARTS THE JUMP LOOP
 		if(player1.isJumping()){
-			player1.setYVelocity(player1.getYVelocity() - VERTICAL_GRAVITY*delta);
-			player1.setY(player1.getY() - player1.getYVelocity()*delta);
-			if(entityCollision(player1.getPolygon())){
-				if(player1.getYVelocity() > 0){//if the player is rising
-					player1.setY(collisionBlock.blockPoly.getMaxY());
-				}
-				else{
-					player1.setY(collisionBlock.blockPoly.getMinY() - (player1.getPolygon().getHeight()+1));
-					player1.setIsJumping(false);
-				}
-				player1.setYVelocity(0);
-			}
+			Jump(player1);
 		}
 		//---------------------------
 		
@@ -177,47 +180,21 @@ public class MapHandler extends BasicGameState{
 		}
 		//---------------------------------
 		
-		//MOVE PLAYER 2 RIGHT
+		//MOVE PLAYER 2
 		if(input.isKeyDown(player2.getMoveRightKey())){
-			player2.setAnimation(Player.RIGHT);
-			player2.setX(player2.getX() + HORISONTAL_VELOCITY*delta);
-			player2.setAnimation(Player.RIGHT);
-			if(entityCollision(player2.getPolygon())){
-				player2.setX(player2.getX() - HORISONTAL_VELOCITY*delta);
-			}
+			moveRight(player2);
 		}
-		//--------------------------------
-		
-		//MOVE PLAYER 2 LEFT
 		if(input.isKeyDown(player2.getMoveLeftKey())){
-			player2.setAnimation(Player.LEFT);
-			player2.setX(player2.getX() - HORISONTAL_VELOCITY*delta);
-			if(entityCollision(player2.getPolygon())){
-				player2.setX(player2.getX() + HORISONTAL_VELOCITY*delta);
-			}
+			moveLeft(player2);
 		}
-		//-----------------------------------
-		
 		// START JUMP FOR PLAYER 2
 		if(input.isKeyPressed(player2.getJumpKey()) && player2.isJumping() == false){ //you can jump as long as you're not airborne
 			player2.setIsJumping(true);
-			//isOnGround = false;
 			player2.setYVelocity(VERTICAL_STARTING_VELOCITY);
 		}
 		// STARTS THE JUMP LOOP
 		if(player2.isJumping()){
-			player2.setYVelocity(player2.getYVelocity() - VERTICAL_GRAVITY*delta);
-			player2.setY(player2.getY() - player2.getYVelocity()*delta);
-			if(entityCollision(player2.getPolygon())){
-				if(player2.getYVelocity() > 0){//if the player is rising
-					player2.setY(collisionBlock.blockPoly.getMaxY());
-				}
-				else{
-					player2.setY(collisionBlock.blockPoly.getMinY() - (player2.getPolygon().getHeight()+1));
-					player2.setIsJumping(false);
-				}
-				player2.setYVelocity(0);
-			}
+			Jump(player2);
 		}
 		//---------------------------
 		
@@ -232,16 +209,43 @@ public class MapHandler extends BasicGameState{
 			player2.setYVelocity(player2.getYVelocity() + VERTICAL_GRAVITY*delta);
 			player2.setY(player2.getY() + player2.getYVelocity()*delta);
 		}
-		//---------------------------------
-		
 	}
 	
+	public void moveRight(Player player) throws SlickException{
+		player.setAnimation(Player.RIGHT);
+		player.setX(player.getX() + HORISONTAL_VELOCITY*delta);
+		player.setAnimation(Player.RIGHT);
+		if(entityCollision(player.getPolygon())){
+			player.setX(player.getX() - HORISONTAL_VELOCITY*delta);
+		}
+	}
+	public void moveLeft(Player player) throws SlickException{
+		player.setAnimation(Player.LEFT);
+		player.setX(player.getX() - HORISONTAL_VELOCITY*delta);
+		if(entityCollision(player.getPolygon())){
+		player.setX(player.getX() + HORISONTAL_VELOCITY*delta);
+		}
+	}
+	public void Jump(Player player) throws SlickException{
+		player.setYVelocity(player.getYVelocity() - VERTICAL_GRAVITY*delta);
+		player.setY(player.getY() - player.getYVelocity()*delta);
+		if(entityCollision(player.getPolygon())){
+			if(player.getYVelocity() > 0){//if the player is rising
+				player.setY(collisionBlock.blockPoly.getMaxY());
+			}
+			else{
+				player.setY(collisionBlock.blockPoly.getMinY() - (player.getPolygon().getHeight()+1));
+				player.setIsJumping(false);
+			}
+			player.setYVelocity(0);
+		}
+	}
 	
 	public boolean entityCollision(Polygon object) throws SlickException{
-		for(int i = 0; i < TestMap.blocks.size(); i++){
-			Block entity = (Block)TestMap.blocks.get(i);
+		for(int i = 0; i < map.getBlock().size(); i++){
+			Block entity = (Block)map.getBlock().get(i);
 			if(object.intersects(entity.blockPoly)){
-				collisionBlock = (Block)TestMap.blocks.get(i);
+				collisionBlock = (Block)map.getBlock().get(i);
 				return true;
 			}
 		}

@@ -1,4 +1,4 @@
-package projectmayhem;
+package playablecharacters;
 
 import java.io.IOException;
 
