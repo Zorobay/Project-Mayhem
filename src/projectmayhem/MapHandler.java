@@ -50,6 +50,9 @@ public class MapHandler extends BasicGameState{
 		player1.setCurrentHealth(100);
 		player2.setMaxHealth(100);
 		player2.setCurrentHealth(100);
+		
+		player1.getAnimation().setAutoUpdate(true);
+		player2.getAnimation().setAutoUpdate(true);
 		//----------------------------
 
 		// SET STABLE FRAMERATE
@@ -71,18 +74,26 @@ public class MapHandler extends BasicGameState{
 		//-------------------------
 		
 		// RENDER OPTIONAL STATS
-		g.setColor(Color.magenta);
+		
 		if(showStats){
 			//RENDER PLAYER 1 STATS
+			g.setColor(Color.green);
+			g.draw(player1.getAttack1Polygon());
+			g.setColor(Color.magenta);
 			g.draw(player1.getPolygon());
 			g.drawString("Player 1: " + String.format("%.3f", player1.getX()) + " CharY: " + String.format("%.3f", player1.getY()), 0, 30);
 			g.drawString("yVelocity: " + player1.getYVelocity(), 0, 50);
 			g.drawString("isJumping: " + player1.isJumping(), 0, 70);
 			g.drawString("playerPoly Y: " + player1.getPolyY(), 0, 90);
 			g.drawString("isAlive: " + player1.isAlive(), 0, 110);
+			g.drawString(player1.getAnimationName() + ": " + player1.getAnimation().getFrame(), 0, 130);
+			g.drawString("isAttacking1: " + player1.isAttacking1(), 0, 150);
 			//----------------------------------
 			
 			//RENDER PLAYER 2 STATS
+			g.setColor(Color.green);
+			g.draw(player2.getAttack1Polygon());
+			g.setColor(Color.magenta);
 			g.draw(player2.getPolygon());
 			g.drawString("Player 2: " + String.format("%.3f", player2.getX()) + " CharY: " + String.format("%.3f", player2.getY()), 600, 30);
 			g.drawString("yVelocity: " + player2.getYVelocity(), 600, 50);
@@ -147,8 +158,17 @@ public class MapHandler extends BasicGameState{
 		//--------------------------------------
 		
 		// PLAYER 1 MOVEMENT AND ATTACKS
-		if(input.isKeyDown(player1.getAttack1Key())){
+		if(input.isKeyPressed(player1.getAttack1Key()) && player1.isAttacking1() == false){
 			player1.triggerAttack1();
+		}
+		if(player1.isAttacking1()){ //Reset polygon after attacking
+			if(player1.getAnimation().getFrame() == player1.getAnimation().getFrameCount() - 1){
+				player1.setAnimationProtected(false);
+				System.out.println("Attack stopping!");
+				player1.setAnimation(Player.IDLE);
+				player1.resetAttack1PolyPosition();
+				player1.setAttacking1(false);
+			}
 		}
 		if(input.isKeyDown(player1.getMoveRightKey())){
 			moveRight(player1);
@@ -212,7 +232,11 @@ public class MapHandler extends BasicGameState{
 	}
 	
 	public void moveRight(Player player) throws SlickException{
-		player.setAnimation(Player.RIGHT);
+		if(player.getAnimationName().equals("Right") == false && player.isAnimationProtected() == false){
+			player.setAnimation(Player.RIGHT);
+			player.getAnimation().restart();
+		}
+		
 		player.setX(player.getX() + HORISONTAL_VELOCITY*delta);
 		player.setAnimation(Player.RIGHT);
 		if(entityCollision(player.getPolygon())){
@@ -220,13 +244,22 @@ public class MapHandler extends BasicGameState{
 		}
 	}
 	public void moveLeft(Player player) throws SlickException{
-		player.setAnimation(Player.LEFT);
+		if(player.getAnimationName().equals("Left") == false && player.isAnimationProtected() == false){
+			player.setAnimation(Player.LEFT);
+			player.getAnimation().restart();
+		}
+		
 		player.setX(player.getX() - HORISONTAL_VELOCITY*delta);
 		if(entityCollision(player.getPolygon())){
 		player.setX(player.getX() + HORISONTAL_VELOCITY*delta);
 		}
 	}
 	public void Jump(Player player) throws SlickException{
+		if(player.getAnimationName().equals("Jump") == false && player.isAnimationProtected() == false){
+			player.setAnimation(Player.JUMP);
+			player.getAnimation().restart();
+		}
+		
 		player.setYVelocity(player.getYVelocity() - VERTICAL_GRAVITY*delta);
 		player.setY(player.getY() - player.getYVelocity()*delta);
 		if(entityCollision(player.getPolygon())){
