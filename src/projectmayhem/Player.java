@@ -7,17 +7,16 @@ import org.newdawn.slick.geom.Polygon;
 import playablecharacters.TestCharacter;
 
 public class Player {
-	
 	private float x,y;
 	private float velocityX, velocityY;
-	private boolean isJumping, isAlive, renderAttack1Poly, isAttacking1, animProtected;
+	private boolean isJumping, isAlive, renderAttack1Poly, isAttacking1, animProtected, hasBeenAttacked;
 	private String name, animationName;
 	private TestCharacter playerCharacter;
 	private Polygon poly, attack1Poly, origPoly;
 	private Animation playerLeft, playerRight, playerJump, playerIdle, playerAttack1, character;
 	private int rightKey, leftKey, jumpKey, attack1Key;
-	private int currentHealth, maxHealth;
-	private int reviveTime;
+	private int currentHealth, maxHealth, reviveTime;
+	private int facing;
 	public static final int IDLE = 0; public static final int LEFT = 1; public static final int RIGHT = 2; public static final int JUMP = 3; 
 	public static final int ATTACK1 = 4;
 	
@@ -46,20 +45,27 @@ public class Player {
 		setAnimation(Player.ATTACK1);
 		character.restart();
 		animProtected = true;
-		System.out.println("Current Frame: " + character.getFrame());
-		if(getAnimation().getFrame() == playerCharacter.getFrameOfAttack1()){  //If the animation has movement before attack
-			setAttack1PolyX(poly.getX() + poly.getWidth());
-		}
 	}
 	public void resetAttack1PolyPosition(){
 		attack1Poly.setX(poly.getX());
 	}
 	
 	public void setX(float xpos){
+		if(xpos > x){
+			facing = 1;
+		}
+		else if(xpos < x){
+			facing = 0;
+		}
 		x = xpos;
 		poly.setX(xpos); //Automatically adjust the polygon x-value according to player x-value
 		if(isAttacking1 == true){
-			attack1Poly.setX(poly.getWidth() + xpos);
+			if(facing == 1){
+				attack1Poly.setX(poly.getWidth() + xpos);
+			}
+			else{
+				attack1Poly.setX(xpos - attack1Poly.getWidth());
+			}
 		}
 		else{
 			attack1Poly.setX(xpos);
@@ -117,6 +123,9 @@ public class Player {
 	public void setAnimationProtected(boolean animprot){
 		animProtected = animprot;
 	}
+	public void setHasBeenAttacked(boolean attacked){
+		hasBeenAttacked = attacked;
+	}
 	public void setReviveTime(int time){
 		reviveTime = time;
 	}
@@ -166,6 +175,13 @@ public class Player {
 	public int getReviveTime(){
 		return reviveTime;
 	}
+	public int getFacingDirection(){
+		//returns 1 for right, 0 for left
+		return facing;
+	}
+	public int getFrameOfAttack1(){
+		return playerCharacter.getFrameOfAttack1();
+	}
 	public boolean isJumping(){
 		return isJumping;
 	}
@@ -177,6 +193,9 @@ public class Player {
 	}
 	public boolean isAnimationProtected(){
 		return animProtected;
+	}
+	public boolean getHasBeenAttacked(){
+		return hasBeenAttacked;
 	}
 	public Animation getAnimation(){
 		return character;

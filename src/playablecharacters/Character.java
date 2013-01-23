@@ -14,9 +14,6 @@ public abstract class Character {
 	protected SpriteSheet idleSprite;
 	protected SpriteSheet attack1Sprite;
 	protected Polygon poly, attackPoly; 
-
-	abstract Polygon performAttack1(Polygon poly, Animation anim);
-	
 	
 	public SpriteSheet getLeftSprite(){
 		return leftSprite;

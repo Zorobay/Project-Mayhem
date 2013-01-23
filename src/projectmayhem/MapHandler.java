@@ -45,6 +45,7 @@ public class MapHandler extends BasicGameState{
 		player2.setMoveRightKey(Input.KEY_D);
 		player2.setMoveLeftKey(Input.KEY_A);
 		player2.setJumpKey(Input.KEY_W);
+		player2.setAttack1Key(Input.KEY_LCONTROL);
 		
 		player1.setMaxHealth(100);
 		player1.setCurrentHealth(100);
@@ -88,6 +89,8 @@ public class MapHandler extends BasicGameState{
 			g.drawString("isAlive: " + player1.isAlive(), 0, 110);
 			g.drawString(player1.getAnimationName() + ": " + player1.getAnimation().getFrame(), 0, 130);
 			g.drawString("isAttacking1: " + player1.isAttacking1(), 0, 150);
+			g.drawString("Facing Direction: " + player1.getFacingDirection(), 0, 170);
+			g.drawString("Health: " + player1.getCurrentHealth(), 0, 190);
 			//----------------------------------
 			
 			//RENDER PLAYER 2 STATS
@@ -100,6 +103,7 @@ public class MapHandler extends BasicGameState{
 			g.drawString("isJumping: " + player2.isJumping(), 600, 70);
 			g.drawString("playerPoly Y: " + player2.getPolyY(), 600, 90);
 			g.drawString("isAlive: " + player2.isAlive(), 600, 110);
+			g.drawString("Health: " + player2.getCurrentHealth(), 600, 130);
 			//----------------------------------
 			
 			//RENDER MISC STATS
@@ -143,6 +147,7 @@ public class MapHandler extends BasicGameState{
 				player1.setX(map.getSpawn1(0));
 				player1.setY(map.getSpawn1(1));
 				player1.setReviveTime(0);
+				player1.setCurrentHealth(100);
 			}
 			player1.setReviveTime(player1.getReviveTime() + delta);
 		}
@@ -152,6 +157,7 @@ public class MapHandler extends BasicGameState{
 				player2.setX(map.getSpawn2(0));
 				player2.setY(map.getSpawn2(1));
 				player2.setReviveTime(0);
+				player1.setCurrentHealth(100);
 			}
 			player2.setReviveTime(player2.getReviveTime() + delta);
 		}
@@ -161,13 +167,33 @@ public class MapHandler extends BasicGameState{
 		if(input.isKeyPressed(player1.getAttack1Key()) && player1.isAttacking1() == false){
 			player1.triggerAttack1();
 		}
+		
+		if(player1.isAttacking1() && player2.getHasBeenAttacked() == false){
+			if(player1.getAnimation().getFrame() == player1.getFrameOfAttack1()){
+				if(attackCollision(player1.getAttack1Polygon())){
+					player2.setCurrentHealth(player2.getCurrentHealth() -10);
+					player2.setHasBeenAttacked(true);
+					if(player2.getCurrentHealth() <= 0){
+						player2.setAlive(false);
+					}
+				}
+			}
+			if(player1.getAnimation().getFrame() == player1.getFrameOfAttack1()){  //If the animation has movement before attack
+				if(player1.getFacingDirection() == 1){
+					player1.setAttack1PolyX(player1.getX() + player1.getPolygon().getWidth());
+				}
+				else{
+					player1.setAttack1PolyX(player1.getX() - player1.getAttack1Polygon().getWidth());
+				}
+			}
+		}
 		if(player1.isAttacking1()){ //Reset polygon after attacking
 			if(player1.getAnimation().getFrame() == player1.getAnimation().getFrameCount() - 1){
 				player1.setAnimationProtected(false);
-				System.out.println("Attack stopping!");
 				player1.setAnimation(Player.IDLE);
 				player1.resetAttack1PolyPosition();
 				player1.setAttacking1(false);
+				player2.setHasBeenAttacked(false);
 			}
 		}
 		if(input.isKeyDown(player1.getMoveRightKey())){
@@ -200,7 +226,40 @@ public class MapHandler extends BasicGameState{
 		}
 		//---------------------------------
 		
-		//MOVE PLAYER 2
+		// PLAYER 2 MOVEMENT AND ATTACKS
+		if(input.isKeyPressed(player2.getAttack1Key()) && player2.isAttacking1() == false){
+			player2.triggerAttack1();
+		}
+		
+		if(player2.isAttacking1() && player1.getHasBeenAttacked() == false){
+			if(player2.getAnimation().getFrame() == player2.getFrameOfAttack1()){
+				if(attackCollision(player2.getAttack1Polygon())){
+					player1.setCurrentHealth(player1.getCurrentHealth() -10);
+					player1.setHasBeenAttacked(true);
+					if(player1.getCurrentHealth() <= 0){
+						player1.setAlive(false);
+					}
+				}
+			}
+			if(player2.getAnimation().getFrame() == player2.getFrameOfAttack1()){  //If the animation has movement before attack
+				if(player2.getFacingDirection() == 1){
+					player2.setAttack1PolyX(player2.getX() + player2.getPolygon().getWidth());
+				}
+				else{
+					player1.setAttack1PolyX(player2.getX() - player2.getAttack1Polygon().getWidth());
+				}
+			}
+		}
+		if(player2.isAttacking1()){ //Reset polygon after attacking
+			if(player2.getAnimation().getFrame() == player1.getAnimation().getFrameCount() - 1){
+				player2.setAnimationProtected(false);
+				player2.setAnimation(Player.IDLE);
+				player2.resetAttack1PolyPosition();
+				player2.setAttacking1(false);
+				player1.setHasBeenAttacked(false);
+			}
+		}
+		
 		if(input.isKeyDown(player2.getMoveRightKey())){
 			moveRight(player2);
 		}
@@ -280,6 +339,30 @@ public class MapHandler extends BasicGameState{
 			if(object.intersects(entity.blockPoly)){
 				collisionBlock = (Block)map.getBlock().get(i);
 				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean attackCollision(Polygon poly) throws SlickException{
+		if(poly == player1.getAttack1Polygon()){ //If poly is player 1s attack poly
+			if(poly.intersects(player2.getPolygon())){
+				if(player1.isAttacking1()){
+					return true;
+				}	
+			}
+		else if((player1.getX() >= player2.getX()) && (player1.getAttack1Polygon().getX() <= player2.getX() + player2.getPolygon().getWidth()) && (player1.getAttack1Polygon().getX() - player1.getAttack1Polygon().getWidth() >= player2.getX())){ //check if player1 is to the right of player2
+				return true;
+			}
+		else if((player1.getX() <= player2.getX()) && (player1.getAttack1Polygon().getX() >= player2.getX()) && (player1.getAttack1Polygon().getX() <= player2.getX() + player2.getPolygon().getWidth())){ //check if player1 is to the right of player2
+				return true;
+			}
+		}
+		else if (poly == player1.getAttack1Polygon()){
+			if(poly.intersects(player1.getPolygon())){
+				if(player2.isAttacking1()){
+					return true;
+				}	
 			}
 		}
 		return false;

@@ -19,35 +19,15 @@ public class TestCharacter extends Character{
 				14, 14,
 				0, 14});
 		
-		leftSprite = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
-		rightSprite = new SpriteSheet("graphics/characters/moveright.png", 32, 64);
-		jumpSprite = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
-		idleSprite = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
-		attack1Sprite = new SpriteSheet("graphics/characters/moveleft.png", 32, 64);
+		leftSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
+		rightSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
+		jumpSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
+		idleSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
+		attack1Sprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
 		attack1Dmg = 20;
 		attack1Range = 100;
-		frameOfAttack1 = 0;
+		frameOfAttack1 = 1;
 		
 		attack1PolyY = poly.getHeight()/2 - attackPoly.getHeight()/2;
-	}
-
-	public Polygon performAttack1(Polygon poly, Animation anim) {
-		System.out.println("Frame: " + anim.getFrame());
-		Polygon origPoly = poly;
-		
-		if(anim.getFrame() != anim.getFrameCount()){
-			return new Polygon(new float[]{
-					poly.getX(), poly.getY(), 
-					poly.getX() + poly.getWidth(), poly.getY(),
-					poly.getX() + poly.getWidth(), poly.getY() + 20,
-					poly.getX() + poly.getWidth() + 20, poly.getY() + 20,
-					poly.getX() + poly.getWidth() + 20, poly.getY() + 40,
-					poly.getX() + 32, poly.getY() + 40,
-					poly.getX() + 32, poly.getY() + 64,
-					poly.getX(), poly.getY() + 64});
-		}
-		else{
-			return origPoly;
-		}
 	}
 }
