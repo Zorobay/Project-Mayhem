@@ -146,6 +146,7 @@ public class MapHandler extends BasicGameState{
 				player1.setAlive(true);
 				player1.setX(map.getSpawn1(0));
 				player1.setY(map.getSpawn1(1));
+				player1.setYVelocity(0);
 				player1.setReviveTime(0);
 				player1.setCurrentHealth(100);
 			}
@@ -156,8 +157,9 @@ public class MapHandler extends BasicGameState{
 				player2.setAlive(true);
 				player2.setX(map.getSpawn2(0));
 				player2.setY(map.getSpawn2(1));
+				player2.setYVelocity(0);
 				player2.setReviveTime(0);
-				player1.setCurrentHealth(100);
+				player2.setCurrentHealth(100);
 			}
 			player2.setReviveTime(player2.getReviveTime() + delta);
 		}
@@ -350,7 +352,7 @@ public class MapHandler extends BasicGameState{
 				if(player1.isAttacking1()){
 					return true;
 				}	
-			}
+			} //TODO : this function still returns true even if the players attack poly is outside  the other players poly, but it starts inside
 		else if((player1.getX() >= player2.getX()) && (player1.getAttack1Polygon().getX() <= player2.getX() + player2.getPolygon().getWidth()) && (player1.getAttack1Polygon().getX() - player1.getAttack1Polygon().getWidth() >= player2.getX())){ //check if player1 is to the right of player2
 				return true;
 			}
@@ -362,7 +364,13 @@ public class MapHandler extends BasicGameState{
 			if(poly.intersects(player1.getPolygon())){
 				if(player2.isAttacking1()){
 					return true;
-				}	
+				}
+			else if((player2.getX() >= player1.getX()) && (player2.getAttack1Polygon().getX() <= player1.getX() + player1.getPolygon().getWidth()) && (player2.getAttack1Polygon().getX() - player2.getAttack1Polygon().getWidth() >= player1.getX())){ //check if player1 is to the right of player2
+					return true;
+				}
+			else if((player2.getX() <= player1.getX()) && (player2.getAttack1Polygon().getX() >= player1.getX()) && (player2.getAttack1Polygon().getX() <= player1.getX() + player1.getPolygon().getWidth())){ //check if player1 is to the right of player2
+					return true;
+				}
 			}
 		}
 		return false;
