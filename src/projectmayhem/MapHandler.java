@@ -172,20 +172,20 @@ public class MapHandler extends BasicGameState{
 		
 		if(player1.isAttacking1() && player2.getHasBeenAttacked() == false){
 			if(player1.getAnimation().getFrame() == player1.getFrameOfAttack1()){
+				
+				if(player1.getFacingDirection() == 1){
+					player1.setAttack1PolyX(player1.getX() + player1.getPolygon().getWidth());
+				}
+				else{
+					player1.setAttack1PolyX(player1.getX() - player1.getAttack1Polygon().getWidth());
+				}
+				
 				if(attackCollision(player1.getAttack1Polygon())){
 					player2.setCurrentHealth(player2.getCurrentHealth() -10);
 					player2.setHasBeenAttacked(true);
 					if(player2.getCurrentHealth() <= 0){
 						player2.setAlive(false);
 					}
-				}
-			}
-			if(player1.getAnimation().getFrame() == player1.getFrameOfAttack1()){  //If the animation has movement before attack
-				if(player1.getFacingDirection() == 1){
-					player1.setAttack1PolyX(player1.getX() + player1.getPolygon().getWidth());
-				}
-				else{
-					player1.setAttack1PolyX(player1.getX() - player1.getAttack1Polygon().getWidth());
 				}
 			}
 		}
