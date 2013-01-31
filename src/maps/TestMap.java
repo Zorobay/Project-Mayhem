@@ -11,5 +11,6 @@ public class TestMap extends Map{
 	
 	public TestMap(String path) throws SlickException{
 		super(path, 608f, new float[]{600, 576-64-32}, new float[]{200, 576-64-32});
+		NAME = "TestMap";
 	}
 }

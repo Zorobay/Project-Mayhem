@@ -3,6 +3,8 @@ package projectmayhem;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+import menus.*;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.ScalableGame;
@@ -19,19 +21,22 @@ public class ProjectMayhem extends StateBasedGame {
 	
 	// Declare all state IDs
 	private static final int MAINMENU = 0;
-	private static final int SETTINGS = 1;
-	private static final int MAPHANDLER = 2;
+	private static final int SETTINGSMENU = 1;
+	private static final int PLAYMENU = 2;
+	private static final int MAPHANDLER = 3;
 
 	public ProjectMayhem(String name) {
 		super(name);
 		this.addState(new MainMenu(MAINMENU));
-		this.addState(new Settings(SETTINGS));
+		this.addState(new SettingsMenu(SETTINGSMENU));
+		this.addState(new PlayMenu(PLAYMENU));
 		this.addState(new MapHandler(MAPHANDLER));
 	}
 
 	public void initStatesList(GameContainer gc) throws SlickException {
 		this.getState(MAINMENU).init(gc, this);
-		this.getState(SETTINGS).init(gc, this);
+		this.getState(SETTINGSMENU).init(gc, this);
+		this.getState(PLAYMENU).init(gc, this);
 		this.getState(MAPHANDLER).init(gc, this);
 		this.enterState(MAINMENU);
 	}

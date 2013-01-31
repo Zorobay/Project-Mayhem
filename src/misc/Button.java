@@ -149,6 +149,16 @@ public class Button {
 		}
 	}
 	
+	public Button(Image def, GameContainer gc){
+		this.def = def;
+		this.gc = gc;
+	}
+	public Button(Image def, Image hover, GameContainer gc){
+		this.def = def;
+		this.hover = hover;
+		this.gc = gc;
+	}
+	
 	public Image getGraphics(){
 		mouseIsHovering();
 		return active;

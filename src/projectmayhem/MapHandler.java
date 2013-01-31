@@ -66,7 +66,7 @@ public class MapHandler extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
 		g.setAntiAlias(true);
 		// RENDER CHARACTER AND MAP
-		map.map.render(0, 0);
+		map.getMap().render(0, 0);
 		player1.getAnimation().draw(player1.getX(), player1.getY());
 		player2.getAnimation().draw(player2.getX(), player2.getY());
 		g.setColor(Color.white);

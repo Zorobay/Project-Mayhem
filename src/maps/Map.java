@@ -8,10 +8,11 @@ import org.newdawn.slick.tiled.TiledMap;
 import projectmayhem.Block;
 
 public class Map {
-	public TiledMap map;
-	private int mapWidth, mapHeight;
-	public float killY;
+	private TiledMap map;
+	protected String NAME;
+	private float killY;
 	private float spawn1[], spawn2[];
+	private int mapWidth, mapHeight;
 	private int platform[] = {0, 0, 32, 0, 32, 32, 0, 32};
 	private ArrayList<Object> blocks;
 
@@ -34,8 +35,14 @@ public class Map {
 			}
 		}
 	}
+	public TiledMap getMap(){
+		return map;
+	}
 	public ArrayList<Object> getBlock(){
 		return blocks;
+	}
+	public String getName(){
+		return NAME;
 	}
 	public float getKillY(){
 		return killY;

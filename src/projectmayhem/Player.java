@@ -32,11 +32,11 @@ public class Player {
 		origPoly = poly;
 		attack1Poly = playerCharacter.getAttackPolygon();
 		
-		playerLeft = new Animation(playerCharacter.getLeftSprite(), 200);
-		playerRight = new Animation(playerCharacter.getRightSprite(), 200);
-		playerJump = new Animation(playerCharacter.getJumpSprite(), 200);
-		playerIdle = new Animation(playerCharacter.getIdleSprite(), 200);
-		playerAttack1 = new Animation(playerCharacter.getAttack1Sprite(), 200);
+		playerLeft = new Animation(playerCharacter.getLeftSprite(), 100);
+		playerRight = new Animation(playerCharacter.getRightSprite(), 100);
+		playerJump = new Animation(playerCharacter.getJumpSprite(), 100);
+		playerIdle = new Animation(playerCharacter.getIdleSprite(), 100);
+		playerAttack1 = new Animation(playerCharacter.getAttack1Sprite(), 100);
 		character = playerIdle;
 		animationName = "Idle";
 	}

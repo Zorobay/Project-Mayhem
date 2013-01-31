@@ -1,4 +1,4 @@
-package projectmayhem;
+package menus;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,7 +15,9 @@ import org.newdawn.slick.font.effects.ColorEffect;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class Settings extends BasicGameState{
+import projectmayhem.ProjectMayhem;
+
+public class SettingsMenu extends BasicGameState{
 
 	public static int ID; 
 	
@@ -27,7 +29,7 @@ public class Settings extends BasicGameState{
 	String resolutionString;
 	Dimension resList4_3[], resList16_9[], resList5_4[];
 		
-	public Settings(int ID){
+	public SettingsMenu(int ID){
 		this.ID = ID;
 	}
 	

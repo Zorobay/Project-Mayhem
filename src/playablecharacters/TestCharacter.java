@@ -10,20 +10,20 @@ public class TestCharacter extends Character{
 	public TestCharacter() throws SlickException{
 		poly = new Polygon(new float[]
 				{0, 0, 
-				32, 0,
-				32, 64, 
-				0, 64});
+				93, 0,
+				93, 102, 
+				0, 102});
 		attackPoly = new Polygon(new float[]
 				{0, 0,
 				14, 0,
 				14, 14,
 				0, 14});
 		
-		leftSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
-		rightSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
-		jumpSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
-		idleSprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
-		attack1Sprite = new SpriteSheet("graphics/characters/walkanim.png", 102, 92, 2);
+		leftSprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
+		rightSprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
+		jumpSprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
+		idleSprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
+		attack1Sprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
 		attack1Dmg = 20;
 		attack1Range = 100;
 		frameOfAttack1 = 1;
