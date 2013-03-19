@@ -20,6 +20,7 @@ public class CharacterMenu extends BasicGameState{
 	public static int ID;
 	private Button mapButtons[], characterButton[];
 	private Button buttonBack, buttonContinue;
+	private Image img;
 
 	private Character p1Character, p2Character, characters[];
 	
@@ -28,6 +29,7 @@ public class CharacterMenu extends BasicGameState{
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
+		
 		characters = new Character[1];
 		characters[0] = new TestCharacter();
 		
@@ -58,7 +60,6 @@ public class CharacterMenu extends BasicGameState{
 		
 		buttonBack.getGraphics().draw(buttonBack.getX(), buttonBack.getY());
 		buttonContinue.getGraphics().draw(buttonContinue.getX(), buttonContinue.getY());
-		
 		
 		for(int i = 0; i < characterButton.length; i++){
 			characterButton[i].setX(100 + i*100);

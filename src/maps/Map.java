@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
-import projectmayhem.Block;
 
 public class Map {
 	private TiledMap map;
@@ -13,7 +12,7 @@ public class Map {
 	private float killY;
 	private float spawn1[], spawn2[];
 	private int mapWidth, mapHeight;
-	private int platform[] = {0, 0, 32, 0, 32, 32, 0, 32};
+	private int platform[] = {0, 0, 60, 0, 60, 60, 0, 60};
 	private ArrayList<Object> blocks;
 
 	public Map(String path, float killY, float spawn1[], float spawn2[]) throws SlickException{
@@ -28,9 +27,9 @@ public class Map {
 		for(int x = 0; x < map.getWidth(); x++){
 			for (int y = 0; y < map.getHeight(); y++){
 				int tileID = map.getTileId(x, y, 0);
-				String tileType = map.getTileProperty(tileID, "platform", "false");
+				String tileType = map.getTileProperty(tileID, "block", "false");
 				if(tileType.equals("true")){
-					blocks.add(new Block(x * 32, y * 32, platform, "platform"));
+					blocks.add(new Block(x * 60, y * 60, platform, "platform"));
 				}
 			}
 		}

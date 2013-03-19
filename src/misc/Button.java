@@ -14,14 +14,14 @@ public class Button {
 	Polygon poly;
 	boolean isSelected;
 	GameContainer gc; 
-	int x, y;
-	int xoffset, yoffset;
+	float x, y;
+	float xoffset, yoffset;
 	
 	static final int MID = -1; static final int LEFTMID = -2; static final int RIGHTMID = -3;
 	static final int MIDTOP = -4; static final int LEFTTOP= -5; static final int RIGHTTOP = -6;
 	static final int MIDBOT = -7; static final int LEFTBOT= -8; static final int RIGHTBOT = -9;
 	
-	public Button(Image def, Image hover, Image selected, int x, int xoffset, int y, int yoffset, GameContainer gc){ //all, with offsets
+	public Button(Image def, Image hover, Image selected, float x, float xoffset, float y, float yoffset, GameContainer gc){ //all, with offsets
 		this.def = def;
 		active = def;
 		this.hover = hover;
@@ -30,7 +30,7 @@ public class Button {
 		this.xoffset = xoffset;
 		this.yoffset = yoffset;
 	
-		switch(x){
+		switch(Math.round(x)){
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2 + xoffset; break;
 		case -2: this.x = 0 + xoffset; break;
 		case -3: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
@@ -40,10 +40,10 @@ public class Button {
 		case -7: this.x = gc.getWidth()/2 - def.getWidth() + xoffset;break;
 		case -8: this.x = 0 + xoffset;break;
 		case -9: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
-		default: this.x = x; break;
+		default: this.x = x + yoffset; break;
 		}
 		
-		switch(y){
+		switch(Math.round(y)){
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
@@ -53,16 +53,16 @@ public class Button {
 		case -7: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
 		case -8: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
 		case -9: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
-		default: this.y = y; break;
+		default: this.y = y + yoffset; break;
 		}
 		
-		poly = new Polygon(new float[]{this.x + xoffset, this.y + yoffset, 
-				  this.x + xoffset + def.getWidth(), this.y + yoffset,
-				  this.x + xoffset + def.getWidth(), this.y + yoffset + def.getHeight(),
-				  this.x + xoffset, this.y + yoffset + def.getWidth()});
+		poly = new Polygon(new float[]{this.x + def.getWidth(), this.y + def.getHeight(), 
+				  this.x, this.y + def.getHeight(),
+				  this.x, this.y,
+				  this.x + def.getWidth(), this.y});
 	}
 	
-	public Button(Image def, Image hover, int x, int xoffset, int y, int yoffset, GameContainer gc){ 
+	public Button(Image def, Image hover, float x, float xoffset, float y, float yoffset, GameContainer gc){ 
 		this.def = def;
 		active = def;
 		this.hover = hover;
@@ -70,7 +70,7 @@ public class Button {
 		this.xoffset = xoffset;
 		this.yoffset = yoffset;
 		
-		switch(x){
+		switch(Math.round(x)){
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2 + xoffset; break;
 		case -2: this.x = 0 + xoffset; break;
 		case -3: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
@@ -80,10 +80,10 @@ public class Button {
 		case -7: this.x = gc.getWidth()/2 - def.getWidth() + xoffset;break;
 		case -8: this.x = 0 + xoffset;break;
 		case -9: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
-		default: this.x = x; break;
+		default: this.x = x + yoffset; break;
 		}
 		
-		switch(y){
+		switch(Math.round(y)){
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
@@ -93,23 +93,23 @@ public class Button {
 		case -7: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
 		case -8: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
 		case -9: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
-		default: this.y = y; break;
+		default: this.y = y + yoffset; break;
 		}
 		
-		poly = new Polygon(new float[]{this.x + xoffset, this.y + yoffset, 
-				  this.x + xoffset + def.getWidth(), this.y + yoffset,
-				  this.x + xoffset + def.getWidth(), this.y + yoffset + def.getHeight(),
-				  this.x + xoffset, this.y + yoffset + def.getWidth()});
+		poly = new Polygon(new float[]{this.x + def.getWidth(), this.y + def.getHeight(), 
+				  this.x, this.y + def.getHeight(),
+				  this.x, this.y,
+				  this.x + def.getWidth(), this.y});
 	}
 	
-	public Button(Image def, Image hover, Image selected, int x, int y, GameContainer gc){ //all, except offsets
+	public Button(Image def, Image hover, Image selected, float x, float y, GameContainer gc){ //all, except offsets
 		this.def = def;
 		active = def;
 		this.hover = hover;
 		this.selected = selected;
 		this.gc = gc;
 		
-		switch(x){
+		switch(Math.round(x)){
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2; break;
 		case -2: this.x = 0; break;
 		case -3: this.x = gc.getWidth() - def.getWidth(); break;
@@ -119,10 +119,10 @@ public class Button {
 		case -7: this.x = gc.getWidth()/2 - def.getWidth();break;
 		case -8: this.x = 0;break;
 		case -9: this.x = gc.getWidth() - def.getWidth(); break;
-		default: this.x = x; break;
+		default: this.x = x + xoffset; break;
 		}
 		
-		switch(y){
+		switch(Math.round(y)){
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
@@ -132,13 +132,13 @@ public class Button {
 		case -7: this.y = gc.getHeight() - def.getHeight(); break;
 		case -8: this.y = gc.getHeight() - def.getHeight(); break;
 		case -9: this.y = gc.getHeight() - def.getHeight(); break;
-		default: this.y = y; break;
+		default: this.y = y + yoffset; break;
 		}
 		
-		poly = new Polygon(new float[]{this.x, this.y, 
-				  this.x + def.getWidth(), this.y,
-				  this.x + def.getWidth(), this.y + def.getHeight(),
-				  this.x, this.y + def.getWidth()});
+		poly = new Polygon(new float[]{this.x + def.getWidth(), this.y + def.getHeight(), 
+				  this.x, this.y + def.getHeight(),
+				  this.x, this.y,
+				  this.x + def.getWidth(), this.y});
 	}
 
 	public Button(Image def, Image hover, int x, int y, GameContainer gc){
@@ -147,7 +147,7 @@ public class Button {
 		this.hover = hover;
 		this.gc = gc;
 		
-		switch(x){
+		switch(Math.round(x)){
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2; break;
 		case -2: this.x = 0; break;
 		case -3: this.x = gc.getWidth() - def.getWidth(); break;
@@ -157,10 +157,10 @@ public class Button {
 		case -7: this.x = gc.getWidth()/2 - def.getWidth();break;
 		case -8: this.x = 0;break;
 		case -9: this.x = gc.getWidth() - def.getWidth(); break;
-		default: this.x = x; break;
+		default: this.x = x + xoffset; break;
 		}
 		
-		switch(y){
+		switch(Math.round(y)){
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
@@ -170,22 +170,22 @@ public class Button {
 		case -7: this.y = gc.getHeight() - def.getHeight(); break;
 		case -8: this.y = gc.getHeight() - def.getHeight(); break;
 		case -9: this.y = gc.getHeight() - def.getHeight(); break;
-		default: this.y = y; break;
+		default: this.y = y + yoffset; break;
 		}
 		
-		poly = new Polygon(new float[]{this.x, this.y, 
-				  this.x + def.getWidth(), this.y,
-				  this.x + def.getWidth(), this.y + def.getHeight(),
-				  this.x, this.y + def.getWidth()});
+		poly = new Polygon(new float[]{this.x + def.getWidth(), this.y + def.getHeight(), 
+				  this.x, this.y + def.getHeight(),
+				  this.x, this.y,
+				  this.x + def.getWidth(), this.y});
 	}
 	
-	public Button(Image def, int x, int y, GameContainer gc){ //A static image and no offsets
+	public Button(Image def, float x, float y, GameContainer gc){ //A static image and no offsets
 		this.def = def;
 		active = def;
 		hover = null;
 		this.gc = gc;
 		
-		switch(x){
+		switch(Math.round(x)){
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2; break;
 		case -2: this.x = 0; break;
 		case -3: this.x = gc.getWidth() - def.getWidth(); break;
@@ -195,10 +195,10 @@ public class Button {
 		case -7: this.x = gc.getWidth()/2 - def.getWidth();break;
 		case -8: this.x = 0;break;
 		case -9: this.x = gc.getWidth() - def.getWidth(); break;
-		default: this.x = x; break;
+		default: this.x = x + xoffset; break;
 		}
 		
-		switch(y){
+		switch(Math.round(y)){
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2; break;
@@ -208,17 +208,17 @@ public class Button {
 		case -7: this.y = gc.getHeight() - def.getHeight(); break;
 		case -8: this.y = gc.getHeight() - def.getHeight(); break;
 		case -9: this.y = gc.getHeight() - def.getHeight(); break;
-		default: this.y = y; break;
+		default: this.y = y + yoffset; break;
 		}
 		
-		poly = new Polygon(new float[]{this.x, this.y, 
-				  this.x + def.getWidth(), this.y,
-				  this.x + def.getWidth(), this.y + def.getHeight(),
-				  this.x, this.y + def.getWidth()});
+		poly = new Polygon(new float[]{this.x + def.getWidth(), this.y + def.getHeight(), 
+				  this.x, this.y + def.getHeight(),
+				  this.x, this.y,
+				  this.x + def.getWidth(), this.y});
 
 	}
 	
-	public Button(Image def, int x, int xoffset, int y, int yoffset, GameContainer gc){ //A static image with offsets
+	public Button(Image def, float x, float xoffset, float y, float yoffset, GameContainer gc){ //A static image with offsets
 		this.def = def;
 		active = def;
 		this.hover = null;
@@ -226,7 +226,7 @@ public class Button {
 		this.xoffset = xoffset;
 		this.yoffset = yoffset;
 		
-		switch(x){
+		switch(Math.round(x)){
 		case -1: this.x = gc.getWidth()/2 - def.getWidth()/2 + xoffset; break;
 		case -2: this.x = 0 + xoffset; break;
 		case -3: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
@@ -236,10 +236,10 @@ public class Button {
 		case -7: this.x = gc.getWidth()/2 - def.getWidth() + xoffset;break;
 		case -8: this.x = 0 + xoffset;break;
 		case -9: this.x = gc.getWidth() - def.getWidth() + xoffset; break;
-		default: this.x = x; break;
+		default: this.x = x + xoffset; break;
 		}
 		
-		switch(y){
+		switch(Math.round(y)){
 		case -1: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
 		case -2: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
 		case -3: this.y = gc.getHeight()/2 - def.getHeight()/2 + yoffset; break;
@@ -249,13 +249,13 @@ public class Button {
 		case -7: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
 		case -8: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
 		case -9: this.y = gc.getHeight() - def.getHeight() + yoffset; break;
-		default: this.y = y; break;
+		default: this.y = y + xoffset; break;
 		}
 		
-		poly = new Polygon(new float[]{this.x + xoffset, this.y + yoffset, 
-				  this.x + xoffset + def.getWidth(), this.y + yoffset,
-				  this.x + xoffset + def.getWidth(), this.y + yoffset + def.getHeight(),
-				  this.x + xoffset, this.y + yoffset + def.getWidth()});
+		poly = new Polygon(new float[]{this.x + xoffset + def.getWidth(), this.y + yoffset + def.getHeight(), 
+				  this.x + xoffset, this.y + yoffset + def.getHeight(),
+				  this.x + xoffset, this.y + yoffset,
+				  this.x + xoffset + def.getWidth(), this.y + yoffset});
 	}
 
 	public Button(Image def, Image hover, Image selected, GameContainer gc){
@@ -325,11 +325,11 @@ public class Button {
 		return false;
 	}
 	
-	public void setX(int x){
+	public void setX(float x){
 		poly.setX(x);
 		this.x = x;
 	}
-	public void setY(int y){
+	public void setY(float y){
 		poly.setY(y);
 		this.y = y;
 	}
@@ -345,10 +345,10 @@ public class Button {
 		isSelected = selected;
 	}
 
-	public int getX(){
+	public float getX(){
 		return x;
 	}
-	public int getY(){
+	public float getY(){
 		return y;
 	}
 	public boolean isSelected(){

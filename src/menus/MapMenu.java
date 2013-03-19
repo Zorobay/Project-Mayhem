@@ -30,7 +30,7 @@ public class MapMenu extends BasicGameState{
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		maps = new Map[1];
-		maps[0] = new TestMap("graphics/maps/test.tmx");
+		maps[0] = new TestMap("graphics/maps/BecauseGrass.tmx");
 				
 		mapButton = new Button[1];
 		mapButton[0] = new Button(new Image("graphics/maps/thumbnails/test_thumbnail.png"), null, new Image("graphics/maps/thumbnails/test_thumbnail_selected.png"), gc);
@@ -58,7 +58,7 @@ public class MapMenu extends BasicGameState{
 			mapButton[i].setScale(0.5f, 0.5f);
 			mapButton[i].setX(100 + i*100);
 			mapButton[i].setY(100 + i*100);
-			mapButton[i].getGraphics().draw(100 + i*100, 100 + i*100);
+			mapButton[i].getGraphics().draw(100/0.5f + i*100/0.5f, 100/0.5f + i*100/0.5f);
 		}
 		
 	}

@@ -4,15 +4,16 @@ import org.newdawn.slick.Animation;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 
-import playablecharacters.TestCharacter;
+import playablecharacters.Character;
+import playablecharacters.Tails;
 
 public class Player {
 	private float x,y;
 	private float velocityX, velocityY;
 	private boolean isJumping, isAlive, renderAttack1Poly, isAttacking1, animProtected, hasBeenAttacked;
 	private String name, animationName;
-	private TestCharacter playerCharacter;
-	private Polygon poly, attack1Poly, origPoly;
+	private Character playerCharacter;
+	private Polygon poly, attackEffectPoly, origPoly;
 	private Animation playerLeft, playerRight, playerJump, playerIdle, playerAttack1, character;
 	private int rightKey, leftKey, jumpKey, attack1Key;
 	private int currentHealth, maxHealth, reviveTime;
@@ -25,12 +26,12 @@ public class Player {
 		isAlive = true;
 		
 		try {
-			playerCharacter = new TestCharacter();
+			playerCharacter = new Tails();
 		} catch (SlickException e) {System.out.println("failed to create Test Character!");}
 		
 		poly = playerCharacter.getPolygon();
 		origPoly = poly;
-		attack1Poly = playerCharacter.getAttackPolygon();
+		attackEffectPoly = playerCharacter.getAttackEffectPolygon();
 		
 		playerLeft = new Animation(playerCharacter.getLeftSprite(), 100);
 		playerRight = new Animation(playerCharacter.getRightSprite(), 100);
@@ -47,7 +48,7 @@ public class Player {
 		animProtected = true;
 	}
 	public void resetAttack1PolyPosition(){
-		attack1Poly.setX(poly.getX());
+		attackEffectPoly.setX(poly.getX());
 	}
 	
 	public void setX(float xpos){
@@ -61,20 +62,20 @@ public class Player {
 		poly.setX(xpos); //Automatically adjust the polygon x-value according to player x-value
 		if(isAttacking1 == true){
 			if(facing == 1){
-				attack1Poly.setX(poly.getWidth() + xpos);
+				attackEffectPoly.setX(poly.getWidth() + xpos);
 			}
 			else{
-				attack1Poly.setX(xpos - attack1Poly.getWidth());
+				attackEffectPoly.setX(xpos - attackEffectPoly.getWidth());
 			}
 		}
 		else{
-			attack1Poly.setX(xpos);
+			attackEffectPoly.setX(xpos);
 		}
 	}
 	public void setY(float ypos){
 		y = ypos;
 		poly.setY(ypos); //Automatically adjust the polygon y-value according to player y-value
-		attack1Poly.setY(y + playerCharacter.getAttack1PolyY());
+		attackEffectPoly.setY(y + playerCharacter.getAttack1PolyY());
 	}
 	public void setPolyX(float xpos){
 		poly.setX(xpos);
@@ -83,10 +84,10 @@ public class Player {
 		poly.setY(ypos);
 	}
 	public void setAttack1PolyX(float xpos){
-		attack1Poly.setX(xpos);
+		attackEffectPoly.setX(xpos);
 	}
 	public void setAttack1PolyY(float ypos){
-		attack1Poly.setY(ypos);
+		attackEffectPoly.setY(ypos);
 	}
 	public void setXVelocity(float xvel){
 		velocityX = xvel;
@@ -100,11 +101,11 @@ public class Player {
 	public void setAnimation(int anim){
 		if(animProtected == false){
 			switch(anim){
-			case 0: character = playerIdle; animationName = "Idle"; break;
-			case 1: character = playerLeft; animationName = "Left";break;
-			case 2: character = playerRight; animationName = "Right"; break;
-			case 3: character = playerJump; animationName = "Jump"; break;
-			case 4: character = playerAttack1; animationName = "Attack1"; break;
+			case 0: character = playerIdle; animationName = "Idle"; poly = origPoly; break;
+			case 1: character = playerLeft; animationName = "Left"; poly = origPoly; break;
+			case 2: character = playerRight; animationName = "Right"; poly = origPoly; break;
+			case 3: character = playerJump; animationName = "Jump"; poly = playerCharacter.getJumpPolygon(); poly.setX(x); poly.setY(y); break;
+			case 4: character = playerAttack1; animationName = "Attack1"; poly = playerCharacter.getAttackPolygon(); poly.setX(x); poly.setY(y); break;
 			}
 		}
 	}
@@ -204,7 +205,7 @@ public class Player {
 		return poly;
 	}
 	public Polygon getAttack1Polygon(){
-		return attack1Poly;
+		return attackEffectPoly;
 	}
 	public String getName(){
 		return name;

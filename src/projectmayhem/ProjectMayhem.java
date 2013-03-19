@@ -24,7 +24,8 @@ public class ProjectMayhem extends StateBasedGame {
 	private static final int SETTINGSMENU = 1;
 	private static final int MAPMENU = 2;
 	private static final int CHARMENU = 3;
-	private static final int MAPHANDLER = 4;
+	private static final int GSETTINGSMENU = 4;
+	private static final int MAPHANDLER = 5;
 
 	public ProjectMayhem(String name) {
 		super(name);
@@ -32,6 +33,7 @@ public class ProjectMayhem extends StateBasedGame {
 		this.addState(new SettingsMenu(SETTINGSMENU));
 		this.addState(new MapMenu(MAPMENU));
 		this.addState(new CharacterMenu(CHARMENU));
+		this.addState(new GameSettingsMenu(GSETTINGSMENU));
 		this.addState(new MapHandler(MAPHANDLER));
 	}
 
@@ -40,6 +42,7 @@ public class ProjectMayhem extends StateBasedGame {
 		this.getState(SETTINGSMENU).init(gc, this);
 		this.getState(MAPMENU).init(gc, this);
 		this.getState(CHARMENU).init(gc, this);
+		this.getState(GSETTINGSMENU).init(gc, this);
 		this.getState(MAPHANDLER).init(gc, this);
 		this.enterState(MAINMENU);
 	}

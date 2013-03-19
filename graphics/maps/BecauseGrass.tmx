@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="32" height="20" tilewidth="60" tileheight="60" backgroundcolor="#8b8b8b">
+ <tileset firstgid="1" name="Because Grass" tilewidth="60" tileheight="60" spacing="1" margin="1">
+  <image source="Tiles/Because Grass/BecauseGrassTiles.png" trans="ff00ff" width="600" height="123"/>
+  <tile id="0">
+   <properties>
+    <property name="block" value="true"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="32" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGNmAkQCmNWBCwsxY+EMBDHQYjgIIGMrhPhLSzkD4CTksYeUKvcIX2U5ceKDshpW1tLAXl93MSJiQ/0mNI2z2otcn2MSJMYeQO4iJZ1xuwmcvOkZ2B7Z0TYzfcZmJTR8uMxhJtIPaGJ+96GmMkBsBwh0TUAAKAAA=
+  </data>
+ </layer>
+</map>

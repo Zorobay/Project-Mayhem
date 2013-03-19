@@ -13,7 +13,7 @@ import maps.*;
 public class MapHandler extends BasicGameState{
 	
 	private static int ID;
-	public TestMap map;
+	public Map map;
 	private float delta;
 	private boolean showStats;
 	private Block collisionBlock;
@@ -31,7 +31,7 @@ public class MapHandler extends BasicGameState{
 		player1 = new Player("Player 1");
 		player2 = new Player("Player 2");
 		
-		map = new TestMap("graphics/maps/test.tmx");
+		map = new BecauseGrass("graphics/maps/BecauseGrass.tmx");
 		showStats = true;
 		
 		//RUN PLAYER METHODS
@@ -133,6 +133,7 @@ public class MapHandler extends BasicGameState{
 		
 		//CHECK IF PLAYERS ARE ALIVE
 		if(player1.getY() >= map.getKillY()){
+			System.out.println("Kill Y: " + map.getKillY());
 			player1.setAlive(false);
 		}
 		if(player2.getY() >= map.getKillY()){

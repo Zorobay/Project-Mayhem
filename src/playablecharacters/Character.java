@@ -13,16 +13,16 @@ public abstract class Character {
 	protected SpriteSheet jumpSprite;
 	protected SpriteSheet idleSprite;
 	protected SpriteSheet attack1Sprite;
-	protected Polygon poly, attackPoly; 
+	protected Polygon poly, attackEffectPoly, attackPoly, jumpPoly; 
 	
 	public SpriteSheet getLeftSprite(){
 		return leftSprite;
 	}
 	public SpriteSheet getRightSprite(){
-		return leftSprite;
+		return rightSprite;
 	}
 	public SpriteSheet getJumpSprite(){
-		return leftSprite;
+		return jumpSprite;
 	}
 	public SpriteSheet getIdleSprite(){
 		return leftSprite;
@@ -49,7 +49,13 @@ public abstract class Character {
 	public Polygon getPolygon(){
 		return poly;
 	}
+	public Polygon getAttackEffectPolygon(){
+		return attackEffectPoly;
+	}
 	public Polygon getAttackPolygon(){
 		return attackPoly;
+	}
+	public Polygon getJumpPolygon(){
+		return jumpPoly;
 	}
 }
