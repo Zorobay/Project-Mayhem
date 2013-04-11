@@ -8,7 +8,7 @@ public class Tails extends Character{
 
 	private final String NAME = "Test Character";
 	public Tails() throws SlickException{
-		poly = new Polygon(new float[]
+		walkPoly = new Polygon(new float[]
 				{0, 0, 
 				42, 0,
 				42, 34, 
@@ -28,21 +28,31 @@ public class Tails extends Character{
 		
 		attackPoly = new Polygon(new float[]
 				{0, 0,
-				39, 0,
-				39, 35,
-				0, 35				
+				58, 0,
+				58, 53,
+				0, 53				
 				});
 		
-		leftSprite = new SpriteSheet("graphics/characters/Tails/WalkLeft.png", 43, 33, 1);
-		rightSprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
-		jumpSprite = new SpriteSheet("graphics/characters/Tails/Jump.png", 37, 39, 1);
-		idleSprite = new SpriteSheet("graphics/characters/walkright2.png", 92, 104);
-		attack1Sprite = new SpriteSheet("graphics/characters/Tails/Attack.png", 58, 53);
+		idlePoly = new Polygon(new float[]
+				{0, 0,
+				42, 0,
+				42, 35,
+				0, 35
+				});
+		
+		leftSprite = new SpriteSheet("graphics/characters/Tails/WalkLeft.png", 43, 34);
+		rightSprite = new SpriteSheet("graphics/characters/Tails/WalkRight.png", 43, 34);
+		jumpLeftSprite = new SpriteSheet("graphics/characters/Tails/JumpLeft.png", 38, 39);
+		jumpRightSprite = new SpriteSheet("graphics/characters/Tails/JumpRight.png", 38, 39);
+		idleLeftSprite = new SpriteSheet("graphics/characters//Tails/IdleLeft.png", 42, 35);
+		idleRightSprite = new SpriteSheet("graphics/characters/Tails/IdleRight.png", 42, 35);
+		attack1LeftSprite = new SpriteSheet("graphics/characters/Tails/AttackLeft.png", 58, 53);
+		attack1RightSprite = new SpriteSheet("graphics/characters/Tails/AttackRight.png", 58, 53);
 		attack1Dmg = 20;
 		attack1Range = 100;
-		frameOfAttack1 = 1;
+		frameOfAttack1 = 7;
 		
-		attack1PolyY = poly.getHeight()/2 - attackEffectPoly.getHeight()/2;
+		attack1PolyY = walkPoly.getHeight()/2 - attackEffectPoly.getHeight()/2;
 
 	}
 }

@@ -9,13 +9,16 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import projectmayhem.MapHandler;
+import projectmayhem.ProjectMayhem;
+
 
 public class GameSettingsMenu extends BasicGameState{
 
 	public static int ID;
 	private Image gsm;
 	private Button one, two;
-	private int lives;
+	private static int deaths;
 	
 	public GameSettingsMenu(int ID){
 		this.ID = ID;
@@ -31,7 +34,7 @@ public class GameSettingsMenu extends BasicGameState{
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
-		g.drawString("Choose number of lives", gc.getWidth()/2 - 100, 200);
+		g.drawString("Choose max number of deaths before game ends", gc.getWidth()/2 - 200, 200);
 		
 		g.drawImage(one.getGraphics(), one.getX(), one.getY());
 		g.drawImage(two.getGraphics(), two.getX(), two.getY());
@@ -41,18 +44,18 @@ public class GameSettingsMenu extends BasicGameState{
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
 
 		if(one.isClicked()){
-			lives = 1;
+			deaths = 1;
 			sbg.enterState(5);
 		}
 		if(two.isClicked()){
-			lives = 2;
+			deaths = 2;
 			sbg.enterState(5);
 		}
 		
 	}
 	
-	public int getLives(){
-		return lives;
+	public static int getDeaths(){
+		return deaths;
 	}
 	
 	public int getID(){

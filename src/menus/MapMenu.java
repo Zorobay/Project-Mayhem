@@ -3,7 +3,7 @@ package menus;
 import maps.*;
 
 import misc.Button;
-import playablecharacters.TestCharacter;
+import playablecharacters.Tails;
 import playablecharacters.Character;
 
 import org.newdawn.slick.GameContainer;
@@ -18,7 +18,8 @@ import org.newdawn.slick.tiled.TiledMap;
 public class MapMenu extends BasicGameState{
 	
 	public static int ID;
-	private Map maps[], selectedMap;
+	private Map maps[];
+	private static Map selectedMap;
 	private Button mapButton[];
 	private Button buttonBack, buttonContinue;
 
@@ -41,13 +42,12 @@ public class MapMenu extends BasicGameState{
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		
-		
 		g.drawString("Selected Map: ", 100, 20); //What map did the user select?
 		if(selectedMap != null){
 			g.drawString(selectedMap.getName(), 250, 20);
 		}
-		g.drawString("P1 Character: ", 400, 20); //Who did player 1 choose?
-		g.drawString("P2 Character: ", 600, 20); //Who did player 2 choose?
+		g.drawString("P1 Character: ", 500, 20); //Who did player 1 choose?
+		g.drawString("P2 Character: ", 900, 20); //Who did player 2 choose?
 		
 		buttonBack.getGraphics().draw(buttonBack.getX(), buttonBack.getY());
 		buttonContinue.getGraphics().draw(buttonContinue.getX(), buttonContinue.getY());
@@ -78,6 +78,10 @@ public class MapMenu extends BasicGameState{
 		if(buttonContinue.isClicked() && selectedMap != null){
 			sbg.enterState(3);
 		}
+	}
+	
+	public static Map getSelectedMap(){
+		return selectedMap;
 	}
 	
 	public int getID(){

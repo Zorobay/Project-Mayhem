@@ -1,37 +1,58 @@
 package projectmayhem;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import maps.*;
+import menus.CharacterMenu;
+import menus.GameSettingsMenu;
+import menus.MapMenu;
 
 public class MapHandler extends BasicGameState{
 	
+	Dimension dim;
+	
 	private static int ID;
 	public Map map;
-	private float delta;
+	private float delta, xscale, yscale;
+	private int deaths;
 	private boolean showStats;
 	private Block collisionBlock;
 	private Player player1,  player2;
+	private Image img;
 	
-	private final float HORISONTAL_VELOCITY = 0.25f;
-	private final float VERTICAL_STARTING_VELOCITY = 1.5f;
-	private final float VERTICAL_GRAVITY = 0.007f;
+	private final float HORISONTAL_VELOCITY = 0.40f;
+	private final float VERTICAL_STARTING_VELOCITY = 2f;
+	private final float VERTICAL_GRAVITY = 0.0045f;
 	
 	public MapHandler(int ID){
 		this.ID = ID;
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+		dim = Toolkit.getDefaultToolkit().getScreenSize(); //To get the default resolution of the monitor
+		xscale = (float)dim.getWidth()/1920;
+		yscale = (float)dim.getHeight()/1200;
+		
+		System.out.println("x: " + xscale);
+		System.out.println("y: " + yscale);
+		img = new Image("graphics/maps/bg.jpg");
+
 		player1 = new Player("Player 1");
 		player2 = new Player("Player 2");
 		
+		
 		map = new BecauseGrass("graphics/maps/BecauseGrass.tmx");
+		deaths = 2;
 		showStats = true;
 		
 		//RUN PLAYER METHODS
@@ -60,10 +81,13 @@ public class MapHandler extends BasicGameState{
 		gc.setTargetFrameRate(100);
 		//-------------------------
 		
+		System.out.println("Player 1 X: " + map.getSpawn1(0));
 		player1.setX(map.getSpawn1(0)); player1.setY(map.getSpawn1(1)); //TODO This should be independent of player character size
 		player2.setX(map.getSpawn2(0)); player2.setY(map.getSpawn2(1));
 	}
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
+		g.scale(xscale, yscale);
+		g.drawImage(img, 0, 0);
 		g.setAntiAlias(true);
 		// RENDER CHARACTER AND MAP
 		map.getMap().render(0, 0);
@@ -71,7 +95,9 @@ public class MapHandler extends BasicGameState{
 		player2.getAnimation().draw(player2.getX(), player2.getY());
 		g.setColor(Color.white);
 		g.drawString(player1.getName(), player1.getCenterX() - (int)(g.getFont().getWidth(player1.getName())/2), player1.getY() - g.getFont().getLineHeight());
+		g.drawString(String.format("%d", player1.getCurrentHealth()), player1.getCenterX() - 2, player1.getY() - g.getFont().getLineHeight() - 10);
 		g.drawString(player2.getName(), player2.getCenterX() - (int)(g.getFont().getWidth(player2.getName())/2), player2.getY() - g.getFont().getLineHeight());
+		g.drawString(String.format("%d", player2.getCurrentHealth()), player2.getCenterX() - 2, player2.getY() - g.getFont().getLineHeight() - 10);
 		//-------------------------
 		
 		// RENDER OPTIONAL STATS
@@ -91,6 +117,8 @@ public class MapHandler extends BasicGameState{
 			g.drawString("isAttacking1: " + player1.isAttacking1(), 0, 150);
 			g.drawString("Facing Direction: " + player1.getFacingDirection(), 0, 170);
 			g.drawString("Health: " + player1.getCurrentHealth(), 0, 190);
+			g.drawString("Poly width: " + player1.getPolygon().getWidth(), 0, 210);
+			g.drawString("deaths: " + player1.getNumOfDeaths(), 0, 230);
 			//----------------------------------
 			
 			//RENDER PLAYER 2 STATS
@@ -104,6 +132,7 @@ public class MapHandler extends BasicGameState{
 			g.drawString("playerPoly Y: " + player2.getPolyY(), 600, 90);
 			g.drawString("isAlive: " + player2.isAlive(), 600, 110);
 			g.drawString("Health: " + player2.getCurrentHealth(), 600, 130);
+			g.drawString("deaths: " + player2.getNumOfDeaths(), 600, 150);
 			//----------------------------------
 			
 			//RENDER MISC STATS
@@ -117,6 +146,10 @@ public class MapHandler extends BasicGameState{
 		}
 	}
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+		if(player1.getNumOfDeaths() >= deaths || player2.getNumOfDeaths() >= deaths){  //GAME OVER!!
+			sbg.enterState(6);
+		}
+		
 		this.delta = delta;
 		Input input = gc.getInput();
 		
@@ -133,7 +166,6 @@ public class MapHandler extends BasicGameState{
 		
 		//CHECK IF PLAYERS ARE ALIVE
 		if(player1.getY() >= map.getKillY()){
-			System.out.println("Kill Y: " + map.getKillY());
 			player1.setAlive(false);
 		}
 		if(player2.getY() >= map.getKillY()){
@@ -143,8 +175,10 @@ public class MapHandler extends BasicGameState{
 		
 		//REVIVE PLAYERS
 		if(player1.isAlive() == false){
+			
 			if(player1.getReviveTime() >= 1000){
 				player1.setAlive(true);
+				player1.setNumOfDeaths(player1.getNumOfDeaths() + 1);
 				player1.setX(map.getSpawn1(0));
 				player1.setY(map.getSpawn1(1));
 				player1.setYVelocity(0);
@@ -154,8 +188,10 @@ public class MapHandler extends BasicGameState{
 			player1.setReviveTime(player1.getReviveTime() + delta);
 		}
 		if(player2.isAlive() == false){
+			
 			if(player2.getReviveTime() >= 1000){
 				player2.setAlive(true);
+				player2.setNumOfDeaths(player2.getNumOfDeaths() + 1);
 				player2.setX(map.getSpawn2(0));
 				player2.setY(map.getSpawn2(1));
 				player2.setYVelocity(0);
@@ -170,7 +206,7 @@ public class MapHandler extends BasicGameState{
 		if(input.isKeyPressed(player1.getAttack1Key()) && player1.isAttacking1() == false){
 			player1.triggerAttack1();
 		}
-		
+	
 		if(player1.isAttacking1() && player2.getHasBeenAttacked() == false){
 			if(player1.getAnimation().getFrame() == player1.getFrameOfAttack1()){
 				
@@ -182,7 +218,7 @@ public class MapHandler extends BasicGameState{
 				}
 				
 				if(attackCollision(player1.getAttack1Polygon())){
-					player2.setCurrentHealth(player2.getCurrentHealth() -10);
+					player2.setCurrentHealth(player2.getCurrentHealth() -50);
 					player2.setHasBeenAttacked(true);
 					if(player2.getCurrentHealth() <= 0){
 						player2.setAlive(false);
@@ -190,15 +226,22 @@ public class MapHandler extends BasicGameState{
 				}
 			}
 		}
+		
 		if(player1.isAttacking1()){ //Reset polygon after attacking
 			if(player1.getAnimation().getFrame() == player1.getAnimation().getFrameCount() - 1){
 				player1.setAnimationProtected(false);
-				player1.setAnimation(Player.IDLE);
+				if(player1.getFacingDirection() == 0){
+					player1.setAnimation(Player.IDLELEFT);
+				}
+				else{
+					player1.setAnimation(Player.IDLERIGHT);
+				}
 				player1.resetAttack1PolyPosition();
 				player1.setAttacking1(false);
 				player2.setHasBeenAttacked(false);
 			}
 		}
+		
 		if(input.isKeyDown(player1.getMoveRightKey())){
 			moveRight(player1);
 		}
@@ -256,7 +299,12 @@ public class MapHandler extends BasicGameState{
 		if(player2.isAttacking1()){ //Reset polygon after attacking
 			if(player2.getAnimation().getFrame() == player1.getAnimation().getFrameCount() - 1){
 				player2.setAnimationProtected(false);
-				player2.setAnimation(Player.IDLE);
+				if(player2.getFacingDirection() == 0){
+					player2.setAnimation(Player.IDLELEFT);
+				}
+				else{
+					player2.setAnimation(Player.IDLERIGHT);
+				}
 				player2.resetAttack1PolyPosition();
 				player2.setAttacking1(false);
 				player1.setHasBeenAttacked(false);
@@ -292,7 +340,6 @@ public class MapHandler extends BasicGameState{
 			player2.setY(player2.getY() + player2.getYVelocity()*delta);
 		}
 	}
-	
 	public void moveRight(Player player) throws SlickException{
 		if(player.getAnimationName().equals("Right") == false && player.isAnimationProtected() == false){
 			player.setAnimation(Player.RIGHT);
@@ -318,7 +365,12 @@ public class MapHandler extends BasicGameState{
 	}
 	public void Jump(Player player) throws SlickException{
 		if(player.getAnimationName().equals("Jump") == false && player.isAnimationProtected() == false){
-			player.setAnimation(Player.JUMP);
+			if(player.getFacingDirection() == 0){
+				player.setAnimation(Player.JUMPLEFT);
+			}
+			else{
+				player.setAnimation(Player.JUMPRIGHT);
+			}
 			player.getAnimation().restart();
 		}
 		
@@ -340,6 +392,8 @@ public class MapHandler extends BasicGameState{
 		for(int i = 0; i < map.getBlock().size(); i++){
 			Block entity = (Block)map.getBlock().get(i);
 			if(object.intersects(entity.blockPoly)){
+				if(object == player1.getPolygon())
+				System.out.println("player x & y: " + player1.getPolygon().getX() + "    " + player1.getPolygon().getY());
 				collisionBlock = (Block)map.getBlock().get(i);
 				return true;
 			}
@@ -354,14 +408,14 @@ public class MapHandler extends BasicGameState{
 					return true;
 				}	
 			} //TODO : this function still returns true even if the players attack poly is outside  the other players poly, but it starts inside
-		else if((player1.getX() >= player2.getX()) && (player1.getAttack1Polygon().getX() <= player2.getX() + player2.getPolygon().getWidth()) && (player1.getAttack1Polygon().getX() - player1.getAttack1Polygon().getWidth() >= player2.getX())){ //check if player1 is to the right of player2
+		else if((player1.getX() >= player2.getX()) && (player1.getAttack1Polygon().getX() <= player2.getX() + xscale*player2.getPolygon().getWidth()) && (player1.getAttack1Polygon().getX() - xscale*player1.getAttack1Polygon().getWidth() >= player2.getX())){ //check if player1 is to the right of player2
 				return true;
 			}
-		else if((player1.getX() <= player2.getX()) && (player1.getAttack1Polygon().getX() >= player2.getX()) && (player1.getAttack1Polygon().getX() <= player2.getX() + player2.getPolygon().getWidth())){ //check if player1 is to the right of player2
+		else if((player1.getX() <= player2.getX()) && (player1.getAttack1Polygon().getX() >= player2.getX()) && (xscale*player1.getAttack1Polygon().getX() <= player2.getX() + xscale*player2.getPolygon().getWidth())){ //check if player1 is to the right of player2
 				return true;
 			}
 		}
-		else if (poly == player1.getAttack1Polygon()){
+		else if (poly == player2.getAttack1Polygon()){
 			if(poly.intersects(player1.getPolygon())){
 				if(player2.isAttacking1()){
 					return true;

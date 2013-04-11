@@ -8,12 +8,11 @@ public abstract class Character {
 	private final static String NAME = "Test Character";
 	protected int attack1Dmg, attack1Range, frameOfAttack1;
 	protected float attack1PolyY;
-	protected SpriteSheet leftSprite;
-	protected SpriteSheet rightSprite;
-	protected SpriteSheet jumpSprite;
-	protected SpriteSheet idleSprite;
-	protected SpriteSheet attack1Sprite;
-	protected Polygon poly, attackEffectPoly, attackPoly, jumpPoly; 
+	protected SpriteSheet leftSprite, rightSprite;
+	protected SpriteSheet jumpLeftSprite, jumpRightSprite;
+	protected SpriteSheet idleLeftSprite, idleRightSprite;
+	protected SpriteSheet attack1LeftSprite, attack1RightSprite;
+	protected Polygon walkPoly, attackEffectPoly, attackPoly, jumpPoly, idlePoly; 
 	
 	public SpriteSheet getLeftSprite(){
 		return leftSprite;
@@ -21,14 +20,23 @@ public abstract class Character {
 	public SpriteSheet getRightSprite(){
 		return rightSprite;
 	}
-	public SpriteSheet getJumpSprite(){
-		return jumpSprite;
+	public SpriteSheet getJumpLeftSprite(){
+		return jumpLeftSprite;
 	}
-	public SpriteSheet getIdleSprite(){
+	public SpriteSheet getJumpRightSprite(){
+		return jumpRightSprite;
+	}
+	public SpriteSheet getIdleLeftSprite(){
 		return leftSprite;
 	}
-	public SpriteSheet getAttack1Sprite(){
-		return attack1Sprite;
+	public SpriteSheet getIdleRightSprite(){
+		return leftSprite;
+	}
+	public SpriteSheet getAttack1LeftSprite(){
+		return attack1LeftSprite;
+	}
+	public SpriteSheet getAttack1RightSprite(){
+		return attack1RightSprite;
 	}
 	//CHARACTER ATTACKS
 	public int getAttack1Dmg(){
@@ -46,8 +54,8 @@ public abstract class Character {
 	public String getName(){
 		return NAME;
 	}
-	public Polygon getPolygon(){
-		return poly;
+	public Polygon getWalkPolygon(){
+		return walkPoly;
 	}
 	public Polygon getAttackEffectPolygon(){
 		return attackEffectPoly;
@@ -57,5 +65,8 @@ public abstract class Character {
 	}
 	public Polygon getJumpPolygon(){
 		return jumpPoly;
+	}
+	public Polygon getIdlePolygon(){
+		return idlePoly;
 	}
 }

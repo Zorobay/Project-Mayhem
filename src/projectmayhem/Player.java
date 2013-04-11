@@ -13,37 +13,62 @@ public class Player {
 	private boolean isJumping, isAlive, renderAttack1Poly, isAttacking1, animProtected, hasBeenAttacked;
 	private String name, animationName;
 	private Character playerCharacter;
-	private Polygon poly, attackEffectPoly, origPoly;
-	private Animation playerLeft, playerRight, playerJump, playerIdle, playerAttack1, character;
+	private Polygon poly, attackEffectPoly, walkPoly, attackPoly, jumpPoly, idlePoly;
+	private Polygon polygons[];
+	private Animation playerLeft, playerRight;
+	private Animation playerLeftJump, playerRightJump;
+	private Animation playerLeftIdle, playerRightIdle;
+	private Animation playerLeftAttack1, playerRightAttack1;
+	private Animation character;
 	private int rightKey, leftKey, jumpKey, attack1Key;
-	private int currentHealth, maxHealth, reviveTime;
+	private int currentHealth, maxHealth, reviveTime, numOfDeaths;
 	private int facing;
-	public static final int IDLE = 0; public static final int LEFT = 1; public static final int RIGHT = 2; public static final int JUMP = 3; 
-	public static final int ATTACK1 = 4;
+	public static final int IDLELEFT = 0; public static final int IDLERIGHT = 1; public static final int LEFT = 2; public static final int RIGHT = 3; 
+	public static final int JUMPLEFT = 4; public static final int JUMPRIGHT = 5; public static final int ATTACK1LEFT = 6; public static final int ATTACK1RIGHT = 7;
 	
-	public Player(String name){
+	public Player(String name) throws SlickException{
 		this.name = name;
+		numOfDeaths = 0;
 		isAlive = true;
 		
-		try {
-			playerCharacter = new Tails();
-		} catch (SlickException e) {System.out.println("failed to create Test Character!");}
-		
-		poly = playerCharacter.getPolygon();
-		origPoly = poly;
+		playerCharacter = new Tails();
+		poly = playerCharacter.getWalkPolygon();
+		walkPoly = poly;
+		attackPoly = playerCharacter.getAttackPolygon();
+		jumpPoly = playerCharacter.getJumpPolygon();
+		idlePoly = playerCharacter.getIdlePolygon();
 		attackEffectPoly = playerCharacter.getAttackEffectPolygon();
+		polygons = new Polygon[5];
+		
+		polygons[0] = poly;
+		polygons[1] = walkPoly;
+		polygons[2] = attackPoly;
+		polygons[3] = jumpPoly;
+		polygons[4] = idlePoly;
 		
 		playerLeft = new Animation(playerCharacter.getLeftSprite(), 100);
 		playerRight = new Animation(playerCharacter.getRightSprite(), 100);
-		playerJump = new Animation(playerCharacter.getJumpSprite(), 100);
-		playerIdle = new Animation(playerCharacter.getIdleSprite(), 100);
-		playerAttack1 = new Animation(playerCharacter.getAttack1Sprite(), 100);
-		character = playerIdle;
+		playerLeftJump = new Animation(playerCharacter.getJumpLeftSprite(), 100);
+		playerRightJump = new Animation(playerCharacter.getJumpRightSprite(), 100);
+		playerLeftIdle = new Animation(playerCharacter.getIdleLeftSprite(), 100);
+		playerRightIdle = new Animation(playerCharacter.getIdleRightSprite(), 100);
+		playerLeftAttack1 = new Animation(playerCharacter.getAttack1LeftSprite(), 50);	
+		playerRightAttack1 = new Animation(playerCharacter.getAttack1RightSprite(), 50);
+		this.character = playerLeftIdle;
 		animationName = "Idle";
+		
+		playerLeftJump.setLooping(false);
+		playerRightJump.setLooping(false);   
+
 	}
 	public void triggerAttack1(){
 		setAttacking1(true);
-		setAnimation(Player.ATTACK1);
+		if(facing == 0){
+			setAnimation(Player.ATTACK1LEFT);
+		}
+		else{
+			setAnimation(Player.ATTACK1RIGHT);
+		}
 		character.restart();
 		animProtected = true;
 	}
@@ -59,7 +84,9 @@ public class Player {
 			facing = 0;
 		}
 		x = xpos;
-		poly.setX(xpos); //Automatically adjust the polygon x-value according to player x-value
+		for(int i = 0; i < polygons.length; i++){
+			polygons[i].setX(x); //Automatically adjust the polygon x-value according to player x-value
+		}
 		if(isAttacking1 == true){
 			if(facing == 1){
 				attackEffectPoly.setX(poly.getWidth() + xpos);
@@ -74,14 +101,20 @@ public class Player {
 	}
 	public void setY(float ypos){
 		y = ypos;
-		poly.setY(ypos); //Automatically adjust the polygon y-value according to player y-value
+		for(int i = 0; i < polygons.length; i++){
+			polygons[i].setY(ypos); //Automatically adjust the polygon y-value according to player y-value
+		}
 		attackEffectPoly.setY(y + playerCharacter.getAttack1PolyY());
 	}
 	public void setPolyX(float xpos){
-		poly.setX(xpos);
+		for(int i = 0; i < polygons.length; i++){
+			polygons[i].setX(xpos); 
+		}
 	}
 	public void setPolyY(float ypos){
-		poly.setY(ypos);
+		for(int i = 0; i < polygons.length; i++){
+			polygons[i].setY(ypos); 
+		}
 	}
 	public void setAttack1PolyX(float xpos){
 		attackEffectPoly.setX(xpos);
@@ -101,11 +134,14 @@ public class Player {
 	public void setAnimation(int anim){
 		if(animProtected == false){
 			switch(anim){
-			case 0: character = playerIdle; animationName = "Idle"; poly = origPoly; break;
-			case 1: character = playerLeft; animationName = "Left"; poly = origPoly; break;
-			case 2: character = playerRight; animationName = "Right"; poly = origPoly; break;
-			case 3: character = playerJump; animationName = "Jump"; poly = playerCharacter.getJumpPolygon(); poly.setX(x); poly.setY(y); break;
-			case 4: character = playerAttack1; animationName = "Attack1"; poly = playerCharacter.getAttackPolygon(); poly.setX(x); poly.setY(y); break;
+			case 0: character = playerLeftIdle; animationName = "Idle Left"; poly = idlePoly; break;
+			case 1: character = playerRightIdle; animationName = "Idle Right"; poly = idlePoly; break;
+			case 2: character = playerLeft; animationName = "Left"; poly = walkPoly; break;
+			case 3: character = playerRight; animationName = "Right"; poly = walkPoly; break;
+			case 4: character = playerLeftJump; animationName = "Jump Left"; poly = jumpPoly; break;
+			case 5: character = playerRightJump; animationName = "Jump Right";  poly = jumpPoly; break; 
+			case 6: character = playerLeftAttack1; animationName = "Attack 1 Left"; poly = attackPoly; break;
+			case 7: character = playerRightAttack1; animationName = "Attack 1 Right"; poly = attackPoly; break;
 			}
 		}
 	}
@@ -129,6 +165,9 @@ public class Player {
 	}
 	public void setReviveTime(int time){
 		reviveTime = time;
+	}
+	public void setNumOfDeaths(int num){
+		numOfDeaths = num;
 	}
 	
 	//SET METHODS FOR KEY CONFIG
@@ -182,6 +221,9 @@ public class Player {
 	}
 	public int getFrameOfAttack1(){
 		return playerCharacter.getFrameOfAttack1();
+	}
+	public int getNumOfDeaths(){
+		return numOfDeaths;
 	}
 	public boolean isJumping(){
 		return isJumping;

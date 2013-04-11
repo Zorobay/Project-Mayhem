@@ -29,7 +29,7 @@ public class Map {
 				int tileID = map.getTileId(x, y, 0);
 				String tileType = map.getTileProperty(tileID, "block", "false");
 				if(tileType.equals("true")){
-					blocks.add(new Block(x * 60, y * 60, platform, "platform"));
+					blocks.add(new Block(x * 60, y * 60, platform, "block"));
 				}
 			}
 		}

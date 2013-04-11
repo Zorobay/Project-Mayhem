@@ -8,6 +8,9 @@
    </properties>
   </tile>
  </tileset>
+ <imagelayer name="Bg" width="32" height="20">
+  <image source="bg.jpg"/>
+ </imagelayer>
  <layer name="Tile Layer 1" width="32" height="20">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC2NgGNmAkQCmNWBCwsxY+EMBDHQYjgIIGMrhPhLSzkD4CTksYeUKvcIX2U5ceKDshpW1tLAXl93MSJiQ/0mNI2z2otcn2MSJMYeQO4iJZ1xuwmcvOkZ2B7Z0TYzfcZmJTR8uMxhJtIPaGJ+96GmMkBsBwh0TUAAKAAA=

@@ -26,6 +26,7 @@ public class ProjectMayhem extends StateBasedGame {
 	private static final int CHARMENU = 3;
 	private static final int GSETTINGSMENU = 4;
 	private static final int MAPHANDLER = 5;
+	private static final int GAMEOVERMENU = 6;
 
 	public ProjectMayhem(String name) {
 		super(name);
@@ -35,6 +36,7 @@ public class ProjectMayhem extends StateBasedGame {
 		this.addState(new CharacterMenu(CHARMENU));
 		this.addState(new GameSettingsMenu(GSETTINGSMENU));
 		this.addState(new MapHandler(MAPHANDLER));
+		this.addState(new GameOverMenu(GAMEOVERMENU));
 	}
 
 	public void initStatesList(GameContainer gc) throws SlickException {
@@ -43,7 +45,8 @@ public class ProjectMayhem extends StateBasedGame {
 		this.getState(MAPMENU).init(gc, this);
 		this.getState(CHARMENU).init(gc, this);
 		this.getState(GSETTINGSMENU).init(gc, this);
-		this.getState(MAPHANDLER).init(gc, this);
+		//this.getState(MAPHANDLER).init(gc, this);
+		this.getState(GAMEOVERMENU).init(gc, this);
 		this.enterState(MAINMENU);
 	}
 
